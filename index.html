@@ -69,7 +69,8 @@ X.imageSmoothingEnabled = false;
 let AC = null;
 function ac(){ if(!AC){ try{ AC = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
   if(AC && AC.state==='suspended'){ try{ AC.resume(); }catch(e){} } return AC; }
-function tone(f,d,type,v,when){ const a=ac(); if(!a) return; type=type||'square'; v=v||0.04; when=when||0;
+function tone(f,d,type,v,when){ if(typeof MUS!=='undefined' && !MUS.on) return;
+  const a=ac(); if(!a) return; type=type||'square'; v=v||0.04; when=when||0;
   const o=a.createOscillator(), g=a.createGain();
   o.type=type; o.frequency.value=f;
   g.gain.setValueAtTime(v, a.currentTime+when);
@@ -1865,34 +1866,36 @@ function drawWin(){
     X.fillStyle=['#f0c040','#e05a4a','#4a90d9','#7dc87d'][i%4];
     X.fillRect(rx, ry, 4,4);
   }
-  // certificate
-  const bx=140, by=28, bw=W-280, bh=190;
+  // certificate — the accomplishment, front and center
+  const bx=120, by=24, bw=W-240, bh=228;
   X.fillStyle='#f2ead2'; X.fillRect(bx,by,bw,bh);
   X.strokeStyle='#b08e21'; X.lineWidth=4; X.strokeRect(bx+4,by+4,bw-8,bh-8);
   X.strokeStyle='#d9b23c'; X.lineWidth=1.5; X.strokeRect(bx+10,by+10,bw-20,bh-20);
   X.textAlign='center'; X.fillStyle='#6a5a20';
-  X.font='bold 13px ui-monospace,Menlo,monospace';
-  X.fillText('★ CERTIFICATE OF INCORPORATION ★', W/2, by+40);
+  X.font='bold 12px ui-monospace,Menlo,monospace';
+  X.fillText('★ CERTIFICATE OF INCORPORATION ★', W/2, by+34);
+  X.fillStyle='#22232e'; X.font='bold 32px ui-monospace,Menlo,monospace';
+  X.fillText('You founded '+G.coName, W/2, by+76);
+  X.font='15px ui-monospace,Menlo,monospace'; X.fillStyle='#4a4534';
+  X.fillText('a '+c.entity+' in '+c.flag+' '+c.name, W/2, by+104);
+  const spent=G.feesSpent+G.livingSpent;
   X.fillStyle='#22232e'; X.font='bold 26px ui-monospace,Menlo,monospace';
-  X.fillText(G.coName, W/2, by+80);
-  X.font='14px ui-monospace,Menlo,monospace'; X.fillStyle='#4a4534';
-  X.fillText('is hereby a real, legal '+c.entity+' in '+c.flag+' '+c.name, W/2, by+108);
-  X.fillText('after '+G.days+' day'+(G.days===1?'':'s')+' of heroic paperwork', W/2, by+130);
-  if(G.renamed) X.fillText('(born "'+G.renamed+'", renamed by government list)', W/2, by+152);
+  X.fillText('in '+G.days+' day'+(G.days===1?'':'s')+' · for '+fmtMoney(spent), W/2, by+150);
+  X.fillStyle='#6a5a20'; X.font='12px ui-monospace,Menlo,monospace';
+  X.fillText('('+fmtMoney(G.feesSpent)+' fees + '+fmtMoney(G.livingSpent)+' living)'
+    +(G.lockedCap? ' · '+fmtMoney(G.lockedCap)+' still locked as capital':''), W/2, by+176);
+  if(G.renamed) X.fillText('(born "'+G.renamed+'", renamed by government list)', W/2, by+198);
+  else X.fillText('Sanity left: '+Math.round(G.sanity)+'% · '+G.docs.length+' documents survived', W/2, by+198);
   // seal + grade
   const [g,quip]=grade(G.days);
-  X.fillStyle='#c0392b'; X.beginPath(); X.arc(bx+bw-52,by+bh-48,30,0,7); X.fill();
-  X.fillStyle='#f2ead2'; X.font='bold 30px ui-monospace,Menlo,monospace';
-  X.fillText(g, bx+bw-52, by+bh-38);
-  // stats
-  X.fillStyle='#f2e8cf'; X.font='bold 14px ui-monospace,Menlo,monospace';
-  X.fillText('Days: '+G.days+'  ·  Fees: '+fmtMoney(G.feesSpent)+'  ·  Living: '+fmtMoney(G.livingSpent)+'  ·  Capital locked: '+fmtMoney(G.lockedCap), W/2, 244);
-  X.fillText('Sanity left: '+Math.round(G.sanity)+'%  ·  Documents collected: '+G.docs.length, W/2, 264);
+  X.fillStyle='#c0392b'; X.beginPath(); X.arc(bx+bw-56,by+bh-52,32,0,7); X.fill();
+  X.fillStyle='#f2ead2'; X.font='bold 32px ui-monospace,Menlo,monospace';
+  X.fillText(g, bx+bw-56, by+bh-41);
   X.fillStyle='#f0c040'; X.font='italic 13px ui-monospace,Menlo,monospace';
-  X.fillText('Grade '+g+' — '+quip, W/2, 286);
+  X.fillText('Grade '+g+' — '+quip, W/2, 274);
   const outro = c.outro || ('It took '+G.days+' days. Somewhere in Delaware, a founder did all of this during a single lunch break.');
   X.fillStyle='#c8cede'; X.font='12px ui-monospace,Menlo,monospace';
-  let oy=308;
+  let oy=296;
   for(const line of wrapText(outro, 760, '12px ui-monospace,Menlo,monospace')){ X.fillText(line, W/2, oy); oy+=16; }
 
   // league table
