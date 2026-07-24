@@ -2,15 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Incorporation</title>
 </head>
 <body>
 <!--ARTIFACT-START-->
 <style>
-  html,body{margin:0;padding:0;background:#0b0d12;min-height:100vh;}
-  #wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:10px;padding:12px;box-sizing:border-box;}
-  #cv{image-rendering:pixelated;max-width:100%;max-height:92vh;border:3px solid #2a2f42;border-radius:4px;box-shadow:0 0 60px rgba(240,192,64,.07), 0 20px 60px rgba(0,0,0,.6);background:#0b0d12;}
+  html,body{margin:0;padding:0;background:#0b0d12;min-height:100vh;overscroll-behavior:none;touch-action:manipulation;}
+  #wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;gap:10px;padding:12px;box-sizing:border-box;}
+  #rotateHint{display:none;position:fixed;inset:0;background:#0b0d12;z-index:9;color:#f0c040;
+    font:bold 18px ui-monospace,Menlo,monospace;align-items:center;justify-content:center;text-align:center;padding:30px;}
+  @media (orientation:portrait) and (max-width:700px){ #rotateHint{display:flex;} }
+  #cv{image-rendering:pixelated;max-width:100%;max-height:88vh;max-height:88dvh;border:3px solid #2a2f42;border-radius:4px;box-shadow:0 0 60px rgba(240,192,64,.07), 0 20px 60px rgba(0,0,0,.6);background:#0b0d12;}
   #foot{color:#5a617a;font:12px ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;}
   #titleUI{position:absolute;display:flex;flex-direction:column;align-items:center;gap:14px;}
   #titleUI input{background:#10131c;border:2px solid #f0c040;color:#f2e8cf;font:bold 18px ui-monospace,Menlo,monospace;padding:10px 14px;width:300px;text-align:center;outline:none;letter-spacing:.04em;}
@@ -22,9 +25,18 @@
   #titleUI button.ghost:hover{border-color:#f0c040;color:#f0c040;}
   #titleUI button:focus-visible,#titleUI input:focus-visible{outline:2px solid #fff;outline-offset:2px;}
   @media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important;} }
+  #touchUI{position:absolute;inset:0;pointer-events:none;}
+  #dpad{position:absolute;left:14px;bottom:14px;display:grid;gap:6px;
+    grid-template-areas:". u ." "l . r" ". d .";grid-template-columns:56px 56px 56px;grid-template-rows:56px 56px 56px;}
+  .tb{pointer-events:auto;background:rgba(27,30,43,.75);border:2px solid rgba(240,192,64,.5);color:#f0c040;
+    border-radius:10px;display:flex;align-items:center;justify-content:center;
+    font:bold 22px ui-monospace,Menlo,monospace;user-select:none;-webkit-user-select:none;}
+  .tb:active{background:rgba(240,192,64,.35);}
+  #abtn{position:absolute;right:18px;bottom:34px;width:74px;height:74px;border-radius:50%;font-size:28px;}
 </style>
+<div id="rotateHint">📱↺<br><br>Rotate your phone —<br>bureaucracy is best endured in landscape.</div>
 <div id="wrap">
-  <div style="position:relative;display:flex;align-items:center;justify-content:center;">
+  <div id="stage" style="position:relative;display:flex;align-items:center;justify-content:center;touch-action:none;">
     <canvas id="cv" width="960" height="600" tabindex="0"></canvas>
     <div id="titleUI" style="display:none;">
       <div class="lbl">Name your startup</div>
@@ -32,8 +44,17 @@
       <button id="btnStart">Found it</button>
       <button id="btnCont" class="ghost" style="display:none;">Continue paperwork</button>
     </div>
+    <div id="touchUI" style="display:none;">
+      <div id="dpad">
+        <div class="tb" data-k="arrowup"    style="grid-area:u;">▲</div>
+        <div class="tb" data-k="arrowleft"  style="grid-area:l;">◀</div>
+        <div class="tb" data-k="arrowright" style="grid-area:r;">▶</div>
+        <div class="tb" data-k="arrowdown"  style="grid-area:d;">▼</div>
+      </div>
+      <div id="abtn" class="tb">E</div>
+    </div>
   </div>
-  <div id="foot">Arrows / WASD move &nbsp;·&nbsp; E / Space talk</div>
+  <div id="foot">Arrows / WASD move &nbsp;·&nbsp; E / Space talk &nbsp;·&nbsp; M sound &nbsp;·&nbsp; click the game if keys don't respond</div>
 </div>
 <script>
 "use strict";
@@ -46,7 +67,8 @@ X.imageSmoothingEnabled = false;
 
 /* ---------------- audio ---------------- */
 let AC = null;
-function ac(){ if(!AC){ try{ AC = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+function ac(){ if(!AC){ try{ AC = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  if(AC && AC.state==='suspended'){ try{ AC.resume(); }catch(e){} } return AC; }
 function tone(f,d,type,v,when){ const a=ac(); if(!a) return; type=type||'square'; v=v||0.04; when=when||0;
   const o=a.createOscillator(), g=a.createGain();
   o.type=type; o.frequency.value=f;
@@ -54,6 +76,19 @@ function tone(f,d,type,v,when){ const a=ac(); if(!a) return; type=type||'square'
   g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime+when+d);
   o.connect(g); g.connect(a.destination);
   o.start(a.currentTime+when); o.stop(a.currentTime+when+d+0.03);
+}
+const MUS={on:true, timer:null, step:0};
+function musicStart(){
+  const a=ac(); if(!a || MUS.timer) return;
+  const lead=[0,3,7,10,12,10,7,3, 0,3,7,10, 15,12,10,7];
+  MUS.timer=setInterval(()=>{
+    if(!MUS.on || !G || G.scene==='title') return;
+    const st=MUS.step++;
+    const base=110*Math.pow(2,(st%64<32?0:5)/12);
+    if(st%2===0) tone(base, 0.30, 'triangle', 0.016);
+    const n=lead[st%16];
+    if(n!==null) tone(220*Math.pow(2,n/12), 0.16, 'square', G.waiting?0.006:0.011);
+  }, 300);
 }
 const sfx = {
   blip : ()=>tone(620,0.045,'square',0.025),
@@ -719,6 +754,14 @@ for(const c of COUNTRIES){
 }
 const CINDEX = {}; COUNTRIES.forEach((c,i)=>CINDEX[c.id]=i);
 
+const WAIT_EVENTS = [
+  {d:3, t:"📮 A letter: one photocopy was not certified. Resubmit. +3 days."},
+  {d:5, t:"📮 The clerk handling your file is on holiday. +5 days."},
+  {d:2, t:"📮 The office moved buildings. Your file did not. +2 days."},
+  {d:4, t:"📮 Public-sector strike. +4 days."},
+  {d:2, c:60, t:"📮 'Administrative surcharge': €60. No explanation. +2 days."},
+  {d:3, t:"📮 Your form was fine. The form ABOUT your form was missing. +3 days."},
+];
 const WAIT_THOUGHTS = [
   "You refresh your inbox. Nothing.",
   "Your competitor shipped v2. You have a folder.",
@@ -857,7 +900,7 @@ function newGame(coName){
   return {
     scene:'title', coName:coName||'Yolo', renamed:null,
     days:0, money:30000, feesSpent:0, lockedCap:0, sanity:100,
-    docs:[], progress:{}, vars:{}, visited:{}, bounces:{},
+    docs:[], progress:{}, vars:{}, visited:{}, bounces:{}, livingSpent:0,
     map:null, inOffice:-1, hubReturn:null,
     px:40*T+16, py:52*T+8, dir:1, moving:false, animT:0,
     dlg:null, waiting:null, fade:null, toasts:[], floaters:[],
@@ -877,7 +920,7 @@ function save(){
     localStorage.setItem(SAVE_KEY, JSON.stringify({
       coName:G.coName, renamed:G.renamed, days:G.days, money:G.money, feesSpent:G.feesSpent,
       lockedCap:G.lockedCap, sanity:G.sanity, docs:G.docs, progress:G.progress,
-      vars:G.vars, visited:G.visited, bounces:G.bounces, coffees:G.coffees.map(c=>c.taken), brokeDown:G.brokeDown,
+      vars:G.vars, visited:G.visited, bounces:G.bounces, livingSpent:G.livingSpent, coffees:G.coffees.map(c=>c.taken), brokeDown:G.brokeDown,
     }));
   }catch(e){}
 }
@@ -903,7 +946,9 @@ function startFade(cb){ G.fade={a:0, dir:1, cb}; }
 function startWait(days, cb){
   const dur=clamp(days*0.25, 1.6, 6.5);
   G.waiting={days, shown:0, t:0, dur, cb,
-    thought: days>=5 ? WAIT_THOUGHTS[(Math.random()*WAIT_THOUGHTS.length)|0] : null };
+    thought: days>=5 ? WAIT_THOUGHTS[(Math.random()*WAIT_THOUGHTS.length)|0] : null,
+    event: (days>=6 && Math.random()<0.4) ? WAIT_EVENTS[(Math.random()*WAIT_EVENTS.length)|0] : null };
+  if(G.waiting.event) G.waiting.dur += 0.9;
 }
 
 function mkPage(speaker, ln){
@@ -955,7 +1000,7 @@ function enterOffice(ci){
     const ex=(G.map.w/2)|0;
     G.px=ex*T+16; G.py=(G.map.h-2)*T+16; G.dir=1;
     if(!G.visited[c.id]){
-      G.visited[c.id]=true; G.days+=1;
+      G.visited[c.id]=true; G.days+=1; G.money-=40; G.livingSpent+=40;
       toast('✈️ A day of travel to '+c.name);
       save();
     }
@@ -1112,6 +1157,15 @@ window.addEventListener('keydown',e=>{
   if(G.scene==='win'){
     if(k==='ArrowUp'||k==='ArrowDown'||k.toLowerCase()==='w'||k.toLowerCase()==='s'){ G.winSel=1-G.winSel; sfx.step(); return; }
     if(k.toLowerCase()==='r'){ resetToTitle(); return; }
+    if(k.toLowerCase()==='c'){
+      const [g]=grade(G.days);
+      const txt='I incorporated "'+G.coName+'" in '+G.done.flag+' '+G.done.name+' in '+G.days+' days — '+
+        fmtMoney(G.feesSpent)+' in fees, '+fmtMoney(G.livingSpent)+' on living, '+fmtMoney(G.lockedCap)+
+        ' locked as capital. Grade '+g+'. Delaware does it in one day.';
+      try{ navigator.clipboard.writeText(txt); }catch(e){}
+      G.copied=1.6;
+      return;
+    }
     if(k==='Enter'||k===' '||k.toLowerCase()==='e') winConfirm();
     return;
   }
@@ -1124,9 +1178,33 @@ window.addEventListener('keydown',e=>{
     if(k==='e'||k==='E'||k===' '||k==='Enter'){ advanceDialog(); }
     return;
   }
+  if(k.toLowerCase()==='m'){ MUS.on=!MUS.on; toast(MUS.on?'🔊 sound on':'🔇 sound off'); return; }
   if(k==='e'||k==='E'||k===' '||k==='Enter') interact();
 });
 window.addEventListener('keyup',e=>{ KEY[e.key.toLowerCase()]=false; });
+/* touch controls */
+if(('ontouchstart' in window) || navigator.maxTouchPoints>0 || /debug=touch/.test(location.search)){
+  const tui=document.getElementById('touchUI');
+  tui.style.display='block';
+  window.addEventListener('pointerdown',()=>ac(),{passive:true});
+  for(const b of tui.querySelectorAll('#dpad .tb')){
+    const k=b.dataset.k;
+    const on=e=>{ e.preventDefault(); KEY[k]=true; };
+    const off=e=>{ e.preventDefault(); KEY[k]=false; };
+    b.addEventListener('pointerdown',on);
+    b.addEventListener('pointerup',off);
+    b.addEventListener('pointercancel',off);
+    b.addEventListener('pointerleave',off);
+  }
+  const ab=document.getElementById('abtn');
+  ab.addEventListener('pointerdown',e=>{
+    e.preventDefault();
+    if(!G) return;
+    if(G.scene==='win'){ winConfirm(); return; }
+    if(G.scene==='over'){ resetToTitle(); return; }
+    if(G.dlg) advanceDialog(); else interact();
+  });
+}
 function winConfirm(){
   if(G.winSel===0){
     // straight into a fresh run — no title, no intro, same company name
@@ -1163,7 +1241,13 @@ function update(dt){
     wt.t+=dt;
     const frac=clamp(wt.t/wt.dur,0,1);
     const target=Math.round(frac*wt.days);
-    while(wt.shown<target){ wt.shown++; G.days++; addSanity(-0.25); }
+    while(wt.shown<target){ wt.shown++; G.days++; addSanity(-0.25); G.money-=40; G.livingSpent+=40; }
+    if(wt.event && !wt.eventDone && frac>0.5){
+      wt.eventDone=true;
+      wt.days+=wt.event.d;
+      if(wt.event.c){ G.money-=wt.event.c; G.feesSpent+=wt.event.c; }
+      sfx.deny();
+    }
     if(frac>=1){ const cb=wt.cb; G.waiting=null; G.dayFlash=1.2; if(cb) cb(); checkFail(); }
     return;
   }
@@ -1179,10 +1263,12 @@ function update(dt){
   if(G.moving){
     if(Math.abs(vx)>Math.abs(vy)) G.dir = vx<0?2:3;
     else if(vy) G.dir = vy<0?1:0;
-    const sp=210*dt, len=Math.hypot(vx,vy);
+    const sp=(KEY['shift']?330:210)*dt, len=Math.hypot(vx,vy);
     tryMove(vx/len*sp, 0);
     tryMove(0, vy/len*sp);
     G.animT+=dt;
+    G.stepT=(G.stepT||0)+dt;
+    if(G.stepT>0.26){ G.stepT=0; if(MUS.on) tone(85,0.045,'triangle',0.02); }
   }
   // coffee pickup
   if(G.inOffice<0){
@@ -1600,7 +1686,7 @@ function drawHUD(){
   X.fillStyle='#f2e8cf'; X.fillText('📄 '+G.docs.length, 448, 15);
   // damage line
   X.font='11px ui-monospace,Menlo,monospace'; X.fillStyle='#8a90a4';
-  X.fillText('burned '+fmtMoney(G.feesSpent)+' in fees · '+fmtMoney(G.lockedCap)+' locked as capital · started with €30,000 on day 0', 14, 36);
+  X.fillText('burned '+fmtMoney(G.feesSpent)+' in fees · '+fmtMoney(G.lockedCap)+' locked · '+fmtMoney(G.livingSpent)+' on rent & ramen (€40/day) · started with €30,000', 14, 36);
   if(location.search.includes('debug=')){ X.fillText((G.px|0)+','+(G.py|0), 850, 36); }
   // mission
   X.textAlign='right'; X.font='bold 13px ui-monospace,Menlo,monospace'; X.fillStyle='#f2e8cf';
@@ -1753,6 +1839,10 @@ function drawWaiting(){
     X.fillStyle='#c8cede'; X.font='italic 14px ui-monospace,Menlo,monospace';
     X.fillText('"'+wt.thought+'"', W/2, 142);
   }
+  if(wt.eventDone && wt.event){
+    X.fillStyle='#ff9c8a'; X.font='bold 14px ui-monospace,Menlo,monospace';
+    X.fillText(wt.event.t, W/2, 172);
+  }
   X.fillStyle='#2a2f42'; X.fillRect(W/2-140,H-38,280,10);
   X.fillStyle='#f0c040'; X.fillRect(W/2-140,H-38,280*frac,10);
   X.textAlign='left';
@@ -1796,7 +1886,7 @@ function drawWin(){
   X.fillText(g, bx+bw-52, by+bh-38);
   // stats
   X.fillStyle='#f2e8cf'; X.font='bold 14px ui-monospace,Menlo,monospace';
-  X.fillText('Days: '+G.days+'  ·  Fees burned: '+fmtMoney(G.feesSpent)+'  ·  Capital locked: '+fmtMoney(G.lockedCap), W/2, 244);
+  X.fillText('Days: '+G.days+'  ·  Fees: '+fmtMoney(G.feesSpent)+'  ·  Living: '+fmtMoney(G.livingSpent)+'  ·  Capital locked: '+fmtMoney(G.lockedCap), W/2, 244);
   X.fillText('Sanity left: '+Math.round(G.sanity)+'%  ·  Documents collected: '+G.docs.length, W/2, 264);
   X.fillStyle='#f0c040'; X.font='italic 13px ui-monospace,Menlo,monospace';
   X.fillText('Grade '+g+' — '+quip, W/2, 286);
@@ -1818,6 +1908,13 @@ function drawWin(){
     X.fillText((cc===c?'▸ ':'  ')+cc.flag+' '+cc.name.padEnd(15).slice(0,15)+' '+String(cc.estDays).padStart(3)+'d ~'+fmtMoney(cc.estFees), x, y);
   });
   X.textAlign='center';
+  if(G.copied>0){ G.copied-=0.016;
+    X.fillStyle='#7dc87d'; X.font='bold 11px ui-monospace,Menlo,monospace';
+    X.fillText('copied ✓', W-60, 20);
+  } else {
+    X.fillStyle='#5a617a'; X.font='11px ui-monospace,Menlo,monospace';
+    X.fillText('C — copy result', W-70, 20);
+  }
   X.fillStyle='#f2e8cf'; X.font='bold 13px ui-monospace,Menlo,monospace';
   X.fillText('Play again?', W/2, H-52);
   const wopts=['Yes — found another startup','No — wander the plaza as a legal person'];
@@ -1876,11 +1973,11 @@ function startRun(fromSave){
   if(s){
     Object.assign(G,{coName:s.coName, renamed:s.renamed, days:s.days, money:s.money,
       feesSpent:s.feesSpent, lockedCap:s.lockedCap, sanity:s.sanity, docs:s.docs,
-      progress:s.progress, vars:s.vars, visited:s.visited, bounces:s.bounces||{}, brokeDown:s.brokeDown});
+      progress:s.progress, vars:s.vars, visited:s.visited, bounces:s.bounces||{}, livingSpent:s.livingSpent||0, brokeDown:s.brokeDown});
     if(s.coffees) s.coffees.forEach((t,i)=>{ if(G.coffees[i]) G.coffees[i].taken=t; });
   }
   G.map=hubMap; G.scene='play';
-  ac(); // unlock audio on gesture
+  ac(); musicStart(); // unlock audio on gesture
   if(!s){
     startDialog([
       {speaker:'Your Inner Voice', text:"You have an idea. It will change everything. Payments for dogs. Uber for notaries. Whatever it is — it's HUGE."},
