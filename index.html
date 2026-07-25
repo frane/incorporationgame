@@ -3,7 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Incorporation</title>
+<title>Incorporation — the bureaucracy game</title>
+<meta name="description" content="A SNES-style adventure through the real company-formation bureaucracies of the US and all 27 EU countries. Delaware takes a day; Germany takes a quarter of a year. Every fee, wait and absurdity is real.">
+<link rel="canonical" href="https://incorporationgame.eu/">
+<meta name="theme-color" content="#0b0d12">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Incorporation">
+<meta property="og:title" content="Incorporation — the bureaucracy game">
+<meta property="og:description" content="Found a startup, then survive the paperwork: US Delaware vs all 27 EU countries, with every real fee, wait and circular dependency. Playable in the browser, free.">
+<meta property="og:url" content="https://incorporationgame.eu/">
+<meta property="og:image" content="https://incorporationgame.eu/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Incorporation — the bureaucracy game">
+<meta name="twitter:description" content="Delaware: 1 day, ~$400. Germany: a quarter of a year, a notary reading aloud, and a tax portal that mails its password. Play the difference.">
+<meta name="twitter:image" content="https://incorporationgame.eu/og.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoGame","name":"Incorporation",
+"url":"https://incorporationgame.eu/","genre":["Simulation","Satire"],
+"gamePlatform":"Web browser","operatingSystem":"Any","isAccessibleForFree":true,
+"inLanguage":["en","de","fr","it","es","nl","pt","pl","cs","sk","hu","ro","bg","hr","sl","el","sv","da","fi","lv","lt"],
+"description":"A top-down pixel adventure through the real company-formation bureaucracies of the United States and all 27 EU countries."}
+</script>
 </head>
 <body>
 <!--ARTIFACT-START-->
@@ -948,7 +971,7 @@ function initCoffees(g){
 }
 
 function save(){
-  if(!G || G.done) return;
+  if(!G) return;
   try{
     localStorage.setItem(SAVE_KEY, JSON.stringify({
       coName:G.coName, renamed:G.renamed, days:G.days, money:G.money, feesSpent:G.feesSpent,
@@ -1088,7 +1111,7 @@ function completeCountry(ci){
   if(Object.keys(DONE).length>=COUNTRIES.length) award('all');
   startFade(()=>{
     G.done=COUNTRIES[ci];
-    G.scene='win';
+    G.scene='win'; G.winSel=0; G.winLock=0.9;
     clearSave();
     sfx.win();
   });
@@ -1234,7 +1257,7 @@ window.addEventListener('keydown',e=>{
       G.copied=1.6;
       return;
     }
-    if(k==='Enter'||k===' '||k.toLowerCase()==='e') winConfirm();
+    if((k==='Enter'||k===' '||k.toLowerCase()==='e') && !(G.winLock>0)) winConfirm();
     return;
   }
   if(G.dlg){
@@ -1268,7 +1291,7 @@ if(('ontouchstart' in window) || navigator.maxTouchPoints>0 || /debug=touch/.tes
   ab.addEventListener('pointerdown',e=>{
     e.preventDefault();
     if(!G) return;
-    if(G.scene==='win'){ winConfirm(); return; }
+    if(G.scene==='win'){ if(!(G.winLock>0)) winConfirm(); return; }
     if(G.scene==='over'){ resetToTitle(); return; }
     if(G.dlg) advanceDialog(); else interact();
   });
@@ -1287,7 +1310,7 @@ function winConfirm(){
   G.px=40*T+16; G.py=36*T+8; G.dir=1;
   toast('🎉 Incorporated. The plaza is yours.');
 }
-CV.addEventListener('click',()=>{ CV.focus(); if(!G) return; if(G.scene==='over'){ resetToTitle(); return; } if(G.scene==='win'){ winConfirm(); return; } if(G.dlg) advanceDialog(); });
+CV.addEventListener('click',()=>{ CV.focus(); if(!G) return; if(G.scene==='over'){ resetToTitle(); return; } if(G.scene==='win'){ if(!(G.winLock>0)) winConfirm(); return; } if(G.dlg) advanceDialog(); });
 
 /* ---------------- update ---------------- */
 function update(dt){
@@ -2057,8 +2080,8 @@ function drawWin(){
   }
   if(G.notesOpen) drawNotes(c);
   X.fillStyle='#f2e8cf'; X.font='bold 13px ui-monospace,Menlo,monospace';
-  X.fillText('Play again?', W/2, H-52);
-  const wopts=['Yes — found another startup','No — wander the plaza as a legal person'];
+  X.fillText('Play again? ('+Object.keys(DONE).length+'/28 conquered — your bests go into the table)', W/2, H-52);
+  const wopts=['Yes — start over, day 0','No — keep going, incorporate in MORE countries'];
   wopts.forEach((o,i)=>{
     X.fillStyle = i===G.winSel? '#f0c040':'#8a90a4';
     X.font = i===G.winSel? 'bold 12px ui-monospace,Menlo,monospace':'12px ui-monospace,Menlo,monospace';
@@ -2190,7 +2213,7 @@ function frame(now){
   if(G){
     update(dt);
     if(G.scene==='title') drawTitle();
-    else if(G.scene==='win'){ G.t+=dt; drawWin(); }
+    else if(G.scene==='win'){ G.t+=dt; if(G.winLock>0) G.winLock-=dt; drawWin(); }
     else if(G.scene==='over') drawOver();
     else {
       drawWorld(); drawHUD(); drawWaiting(); drawDialog();
