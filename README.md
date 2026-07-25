@@ -42,6 +42,10 @@ Or play the hosted version at [incorporationgame.eu](https://incorporationgame.e
 - Achievements, per-country personal bests, a league table of bureaucracy,
   and an EU construction site ("opening 2028") that cannot be entered.
 
+## Credits
+
+Made with ♥ and AI by [@fbandov](https://x.com/fbandov).
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
