@@ -227,22 +227,22 @@ const COUNTRIES = [
 { id:'cy', name:'Cyprus', flag:'🇨🇾', entity:'LTD', estDays:25, roof:5, office:'Έφορος Εταιρειών (Registrar of Companies), Λευκωσία', bs:'white', wc:'#f4f1e8', rc:['#3f6fb5','#2d5390'],
   tag:"DIY incorporation is legally impossible — only a Cyprus advocate may swear the founding declaration. Your constitution will be in Greek, whether you read Greek or not.",
   steps:[
-    { who:'Advocate Andreou', lines:[
-      "In Cyprus, the HE1 declaration that founds a company may only be sworn by a practising advocate. Filing it yourself is not merely unwise — it is legally impossible.",
-      "My fee is €1,200. It includes hospitality. The coffee is genuinely excellent and the invoice is genuinely real." ],
-      cost:1200, san:5, doc:'Engagement Letter' },
-    { who:'Name Approval Officer', lines:[
-      "The Registrar reviews your company name for uniqueness, decency, and — how to put it — vibes. Rejection reasons are not always disclosed. It builds character.",
-      "The regular queue takes weeks. The accelerated queue is €30. Everyone pays the €30." ],
-      cost:30, wait:10, san:5, doc:'Name Approval' },
-    { who:'The Drafting Desk', lines:[
-      "Your Memorandum & Articles of Association will be drafted in GREEK. This is required. Do you read Greek?",
-      "No? An English translation is available — as a paid extra. You will own a constitution you cannot read." ],
-      cost:120, wait:3, san:4, doc:'Memorandum (in Greek)' },
-    { who:'Registrar of Companies', lines:[
-      "Forms HE1, HE2, HE3, filing fee €165, plus €100 acceleration. In return: certificates of incorporation, of directors, of shareholders, of registered office.",
-      "One more thing: every Cyprus company requires a full annual audit. Forever. Even the tiny ones. The auditors also serve excellent coffee." ],
-      cost:265, wait:8, doc:'Certificate of Incorporation' } ] },
+    { who:'Δικηγόρος Ανδρέου', lines:[
+      {t:"Στην Κύπρο, τη δήλωση ΗΕ1 που ιδρύει εταιρεία την υπογράφει ένορκα μόνο δικηγόρος. Να την καταθέσετε μόνος σας; Δεν είναι απλώς ασύνετο — είναι νομικά αδύνατο.", s:"In Cyprus, the HE1 declaration that founds a company may only be sworn by a practising advocate. Filing it yourself is not merely unwise — it is legally impossible."},
+      {t:"Η αμοιβή μου: €1.200. Περιλαμβάνει φιλοξενία. Ο καφές είναι εξαιρετικός και το τιμολόγιο αληθινό.", s:"My fee: €1,200. It includes hospitality. The coffee is excellent and the invoice is real."} ],
+      cost:1200, san:5, doc:'Συμφωνία ανάθεσης' },
+    { who:'Έγκριση ονόματος', lines:[
+      {t:"Ο Έφορος εξετάζει το όνομά σας για μοναδικότητα, ευπρέπεια και — πώς να το θέσουμε — αίσθηση. Οι λόγοι απόρριψης δεν γνωστοποιούνται πάντα.", s:"The Registrar reviews your name for uniqueness, decency and — how to put it — vibes. Rejection reasons are not always disclosed."},
+      {t:"Η κανονική ουρά: εβδομάδες. Η ταχεία: €30. Όλοι πληρώνουν τα €30.", s:"The regular queue: weeks. The accelerated one: €30. Everyone pays the €30."} ],
+      cost:30, wait:10, san:5, doc:'Έγκριση ονόματος' },
+    { who:'Σύνταξη καταστατικού', lines:[
+      {t:"Το ιδρυτικό έγγραφο και το καταστατικό συντάσσονται στα ΕΛΛΗΝΙΚΑ. Το απαιτεί ο νόμος. Διαβάζετε ελληνικά; Όχι;", s:"The Memorandum & Articles are drafted in GREEK. The law requires it. Do you read Greek? No?"},
+      {t:"Αγγλική μετάφραση διατίθεται — με επιπλέον χρέωση. Θα κατέχετε ένα καταστατικό που δεν μπορείτε να διαβάσετε.", s:"An English translation is available — as a paid extra. You will own a constitution you cannot read."} ],
+      cost:120, wait:3, san:4, doc:'Καταστατικό (στα ελληνικά)' },
+    { who:'Έφορος Εταιρειών', lines:[
+      {t:"Έντυπα ΗΕ1, ΗΕ2, ΗΕ3, τέλος €165, συν €100 για επίσπευση. Πιστοποιητικά: σύστασης, διευθυντών, μετόχων, εγγεγραμμένου γραφείου.", s:"Forms HE1, HE2, HE3, €165 fee, plus €100 acceleration. Certificates: of incorporation, of directors, of shareholders, of registered office."},
+      {t:"Και κάτι ακόμη: κάθε κυπριακή εταιρεία χρειάζεται πλήρη ετήσιο έλεγχο. Για πάντα. Και οι ελεγκτές σερβίρουν εξαιρετικό καφέ.", s:"One more thing: every Cyprus company needs a full annual audit. Forever. The auditors also serve excellent coffee."} ],
+      cost:265, wait:8, doc:'Πιστοποιητικό σύστασης' } ] },
 
 { id:'cz', name:'Czechia', flag:'🇨🇿', entity:'s.r.o.', estDays:16, roof:6, office:'Městský soud v Praze — Obchodní rejstřík', bs:'plaster', wc:'#efd9a8', rc:['#b0563c','#8a3f2a'],
   tag:"The trade licence is issued to a company that doesn't exist yet, and expires if the company isn't born within 90 days. Minimum capital: 1 koruna. Statutory-minimum articles: court fee €0. Custom articles: CZK 2,700.",
