@@ -361,6 +361,21 @@ if(('ontouchstart' in window) || navigator.maxTouchPoints>0 || /debug=touch/.tes
   const tui=document.getElementById('touchUI');
   tui.style.display='block';
   document.documentElement.classList.add('touch');
+  // iOS: kill double-tap zoom but keep rapid taps working (re-dispatch as click)
+  let lastTouchEnd=0;
+  document.addEventListener('touchend',e=>{
+    const now=Date.now();
+    if(now-lastTouchEnd<350){
+      e.preventDefault();
+      const t=e.changedTouches && e.changedTouches[0];
+      if(t && e.target){
+        e.target.dispatchEvent(new MouseEvent('click',
+          {clientX:t.clientX, clientY:t.clientY, bubbles:true, cancelable:true}));
+      }
+    }
+    lastTouchEnd=now;
+  },{passive:false});
+  document.addEventListener('gesturestart',e=>e.preventDefault());
   const ft=document.getElementById('foot');
   if(ft) ft.innerHTML='tap ▲▼◀▶ to move · E to talk · made with ♥ and AI by <a href="https://x.com/fbandov" target="_blank" rel="noopener" style="color:#8a90a4;">@fbandov</a>';
   window.addEventListener('pointerdown',()=>ac(),{passive:true});
