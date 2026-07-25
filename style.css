@@ -16,13 +16,13 @@ html,body{margin:0;padding:0;background:#0b0d12;min-height:100vh;overscroll-beha
   #titleUI button:focus-visible,#titleUI input:focus-visible{outline:2px solid #fff;outline-offset:2px;}
   @media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important;} }
   #touchUI{position:fixed;inset:0;pointer-events:none;z-index:5;}
-  #dpad{position:fixed;left:calc(env(safe-area-inset-left, 0px) + 8px);bottom:14px;display:grid;gap:4px;
+  #dpad{position:fixed;left:calc(env(safe-area-inset-left, 0px) + 8px);bottom:calc(env(safe-area-inset-bottom, 0px) + 20px);display:grid;gap:4px;
     grid-template-areas:". u ." "l . r" ". d .";grid-template-columns:40px 40px 40px;grid-template-rows:40px 40px 40px;}
   .tb{pointer-events:auto;touch-action:none;background:rgba(27,30,43,.6);border:2px solid rgba(240,192,64,.4);color:#f0c040;
     border-radius:9px;display:flex;align-items:center;justify-content:center;
     font:bold 17px ui-monospace,Menlo,monospace;user-select:none;-webkit-user-select:none;}
   .tb:active{background:rgba(240,192,64,.35);}
-  #abtn{position:fixed;right:calc(env(safe-area-inset-right, 0px) + 10px);bottom:34px;width:60px;height:60px;border-radius:50%;font-size:24px;}
-  html.touch #wrap{padding:4px;gap:4px;}
-  html.touch #cv{max-height:92dvh;border-width:2px;}
+  #abtn{position:fixed;right:calc(env(safe-area-inset-right, 0px) + 10px);bottom:calc(env(safe-area-inset-bottom, 0px) + 38px);width:60px;height:60px;border-radius:50%;font-size:24px;}
+  html.touch #wrap{padding:4px;gap:4px;min-height:100svh;}
+  html.touch #cv{max-height:86svh;border-width:2px;}
   html.touch #foot{font-size:10px;letter-spacing:.04em;}

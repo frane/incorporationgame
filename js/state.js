@@ -378,7 +378,11 @@ if(('ontouchstart' in window) || navigator.maxTouchPoints>0 || /debug=touch/.tes
   },{passive:false});
   document.addEventListener('gesturestart',e=>e.preventDefault());
   const ft=document.getElementById('foot');
-  if(ft) ft.innerHTML='tap ▲▼◀▶ to move · E to talk · made with ♥ and AI by <a href="https://x.com/fbandov" target="_blank" rel="noopener" style="color:#8a90a4;">@fbandov</a>';
+  if(ft){
+    ft.innerHTML = navigator.standalone===false
+      ? '📲 no browser bars: Share → Add to Home Screen · ♥ <a href="https://x.com/fbandov" target="_blank" rel="noopener" style="color:#8a90a4;">@fbandov</a>'
+      : 'tap to move & talk · ♥ <a href="https://x.com/fbandov" target="_blank" rel="noopener" style="color:#8a90a4;">@fbandov</a>';
+  }
   window.addEventListener('pointerdown',()=>ac(),{passive:true});
   for(const b of tui.querySelectorAll('#dpad .tb')){
     const k=b.dataset.k;
