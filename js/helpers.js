@@ -19,18 +19,54 @@ function tone(f,d,type,v,when){ if(typeof MUS!=='undefined' && !MUS.on) return;
   o.connect(g); g.connect(a.destination);
   o.start(a.currentTime+when); o.stop(a.currentTime+when+d+0.03);
 }
-const MUS={on:true, timer:null, step:0};
+const MUS={on:true, timer:null, next:0, step:0, bus:null};
+function musBus(){
+  const a=ac(); if(!a) return null;
+  if(!MUS.bus){
+    const master=a.createGain(); master.gain.value=0.55; master.connect(a.destination);
+    const dly=a.createDelay(0.6); dly.delayTime.value=0.27;
+    const fb=a.createGain(); fb.gain.value=0.25; dly.connect(fb); fb.connect(dly);
+    const wet=a.createGain(); wet.gain.value=0.32; dly.connect(wet); wet.connect(master);
+    MUS.bus={master, dly};
+  }
+  return MUS.bus;
+}
+function mnote(t,midi,dur,type,vol,echo){
+  const a=ac(); const b=musBus(); if(!a||!b) return;
+  const o=a.createOscillator(), g=a.createGain();
+  o.type=type; o.frequency.value=440*Math.pow(2,(midi-69)/12);
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.linearRampToValueAtTime(vol,t+0.02);
+  g.gain.setValueAtTime(vol,t+dur*0.5);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(g); g.connect(b.master);
+  if(echo) g.connect(b.dly);
+  o.start(t); o.stop(t+dur+0.05);
+}
+/* a calm Am - F - C - G chip loop; melody enters every other half */
+const MUS_CHORDS=[[57,60,64],[53,57,60],[48,52,55],[55,59,62]];
+const MUS_MEL=[76,null,74,null,72,null,74,76, 77,null,76,null,74,null,72,null,
+               76,null,79,null,77,null,76,74, 72,null,74,null,69,null,null,null];
 function musicStart(){
   const a=ac(); if(!a || MUS.timer) return;
-  const lead=[0,3,7,10,12,10,7,3, 0,3,7,10, 15,12,10,7];
+  MUS.next=a.currentTime+0.1;
   MUS.timer=setInterval(()=>{
-    if(!MUS.on || !G || G.scene==='title') return;
-    const st=MUS.step++;
-    const base=110*Math.pow(2,(st%64<32?0:5)/12);
-    if(st%2===0) tone(base, 0.30, 'triangle', 0.016);
-    const n=lead[st%16];
-    if(n!==null) tone(220*Math.pow(2,n/12), 0.16, 'square', G.waiting?0.006:0.011);
-  }, 300);
+    const a2=ac(); if(!a2) return;
+    if(!MUS.on || !G || G.scene==='title'){ MUS.next=Math.max(MUS.next,a2.currentTime+0.1); return; }
+    const spb=0.27;
+    while(MUS.next < a2.currentTime+0.45){
+      const st=MUS.step, t=MUS.next;
+      const bar=(st>>3)%4, half=(st>>5)%2, chord=MUS_CHORDS[bar];
+      const duck=G.waiting?0.45:1;
+      if(st%8===0) mnote(t,chord[0]-12,spb*3.2,'triangle',0.055*duck,false);
+      if(st%8===4) mnote(t,chord[0]-12+(bar===3?2:0),spb*3.2,'triangle',0.045*duck,false);
+      const ai=[0,1,2,1,0,1,2,1][st%8];
+      if(!(st%8===7 && bar%2===1)) mnote(t,chord[ai]+(half?12:0),spb*0.95,'square',0.016*duck,true);
+      const mv=MUS_MEL[st%32];
+      if(mv!==null && half) mnote(t,mv,spb*1.9,'triangle',0.03*duck,true);
+      MUS.step++; MUS.next+=spb;
+    }
+  },110);
 }
 const sfx = {
   blip : ()=>tone(620,0.045,'square',0.025),
