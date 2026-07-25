@@ -409,7 +409,7 @@ const COUNTRIES = [
 { id:'gr', name:'Greece', flag:'🇬🇷', entity:'IKE', estDays:14, roof:4, office:'Γενικό Εμπορικό Μητρώο (Γ.Ε.ΜΗ.), Αθήνα', bs:'white', wc:'#f6f3ec', rc:['#3f6fb5','#2d5390'],
   tag:"An €18 company in one hour, online, no notary — genuinely real. Then €245/month social insurance from day one and €100/year for the registry to remember you exist.",
   steps:[
-    { who:'ΔΟΥ (Εφορία)', lines:[
+    { who:'ΔΟΥ (Εφορία)', queue:'ΕΞΥΠΗΡΕΤΕΙΤΑΙ ΤΩΡΑ', lines:[
       {t:"Πρώτα ΑΦΜ για κάθε ιδρυτή. Εξυπηρετείται τώρα το νούμερο 12. Εσείς είστε το 847.", s:"First, an AFM tax number for every founder. Now serving number 12. You are number 847."},
       {t:"Η μηχανή σφραγίδων δεν έχει μελάνι. Ο άνθρωπος με το μελάνι έρχεται την Πέμπτη.", s:"The stamp machine is out of ink. The ink man comes on Thursday."} ],
       wait:7, san:10, doc:'ΑΦΜ' },
@@ -696,7 +696,7 @@ const COUNTRIES = [
 { id:'es', name:'Spain', flag:'🇪🇸', entity:'S.L.', estDays:40, roof:0, office:'Registro Mercantil de Madrid', bs:'medit', wc:'#eabf8e', rc:['#c0563a','#96422c'],
   tag:"NIE appointments are scalped by bots at midnight; the physical queue starts at 6 AM. You'll file a mandatory tax return for €0, and the late registrar's penalty is a discount on his own fee. RETA: ~€315/month, even unpaid.",
   steps:[
-    { who:'Extranjería', lines:[
+    { who:'Extranjería', queue:'VENTANILLA ÚNICA', lines:[
       {t:"Necesita un NIE — el número de identidad de extranjero. Las citas se publican a medianoche en la web. A las 00:01 ya no quedan: los bots las revenden.", s:"You need an NIE — the foreigner identification number. Appointments are released at midnight on the website. By 00:01 they're gone: bots scalp them."},
       {t:"La cola física empieza a las seis de la mañana. Traiga agua. Traiga un libro. Traiga determinación.", s:"The physical queue starts at six in the morning. Bring water. Bring a book. Bring resolve."} ],
       wait:15, san:12, doc:'NIE' },
@@ -800,12 +800,10 @@ function solidAt(m,x,y){ return SOLID.has(mget(m,x,y)); }
 function mkey(x,y){ return x+','+y; }
 
 /* ------- hub ------- */
-const HUBW=81, HUBH=54;
+const HUBW=80, HUBH=66;
+const HUB_POS={};
 function buildHub(){
   const m = newMap(HUBW,HUBH,GRASS);
-  // vertical avenues
-  const aves=[7, 40, 73];
-  // one embassy building
   function placeBuilding(x0,y0,i){
     for(let x=x0+1;x<=x0+8;x++){ mset(m,x,y0,ROOF2,i); mset(m,x,y0+1,ROOF,i); }
     for(let y=y0+2;y<=y0+4;y++) for(let x=x0+1;x<=x0+8;x++) mset(m,x,y,WALL,i);
@@ -815,48 +813,60 @@ function buildHub(){
     mset(m,x0+4,y0+5,PATH); mset(m,x0+4,y0+6,PATH);
     m.labels.push({x:(x0+5)*T-T/2, y:y0*T-6, text:COUNTRIES[i].flag+' '+COUNTRIES[i].name});
   }
-  // EU-country grid: 7 cols x 4 rows (USA stands apart, next to the EU site)
+  // EU-country slots ringing the central plaza
+  const slots=[];
+  for(let c=0;c<6;c++) slots.push([3+c*12,3]);    // north outer
+  for(let c=0;c<6;c++) slots.push([3+c*12,12]);   // north inner
+  for(let r=0;r<3;r++) slots.push([2,24+r*9]);    // west
+  for(let r=0;r<3;r++) slots.push([69,24+r*9]);   // east
+  for(let c=0;c<6;c++) slots.push([3+c*12,48]);   // south inner
+  for(let c=0;c<3;c++) slots.push([21+c*12,56]);  // south outer
   for(let i=1;i<COUNTRIES.length;i++){
-    const sl=i-1, col=sl%7, row=(sl/7)|0;
-    placeBuilding(3+col*11, 3+row*11, i);
+    HUB_POS[i]=slots[i-1];
+    placeBuilding(slots[i-1][0], slots[i-1][1], i);
   }
-  // USA: beside the EU construction site, by the plaza
-  placeBuilding(10, 44, 0);
-  for(let x=14;x<=28;x++) if(mget(m,x,49)===GRASS||mget(m,x,49)===FLOWER||mget(m,x,49)===TREE) mset(m,x,49,PATH);
-  // horizontal streets under each row of buildings
-  for(let row=0;row<4;row++){
-    const y=3+row*11+6;
-    for(let x=1;x<HUBW-1;x++){ mset(m,x,y,PATH); }
-  }
-  // vertical avenues
-  for(const ax of aves) for(let y=8;y<=47;y++) if(mget(m,ax,y)===GRASS||mget(m,ax,y)===PATH) mset(m,ax,y,PATH);
-  // plaza at bottom
-  for(let y=47;y<HUBH-1;y++) for(let x=28;x<=52;x++) mset(m,x,y,PLAZA);
-  mset(m,40,50,FOUNTAIN);
-  // decorative trees & flowers on remaining grass
+  // streets + avenues
+  for(const y of [9,18,46,54,62]) for(let x=1;x<HUBW-1;x++) if(mget(m,x,y)===GRASS) mset(m,x,y,PATH);
+  for(const x of [7,40,72]) for(let y=9;y<=62;y++) if(mget(m,x,y)===GRASS) mset(m,x,y,PATH);
+  // central plaza
+  for(let y=26;y<=38;y++) for(let x=26;x<=53;x++) mset(m,x,y,PLAZA);
+  mset(m,40,32,FOUNTAIN);
+  // USA and the EU construction site face the plaza from its north edge
+  HUB_POS[0]=[28,20];
+  placeBuilding(28,20,0);
+  const ex0=40, ey0=20;
+  for(let x=ex0+1;x<=ex0+8;x++){ mset(m,x,ey0,ROOF2,99); mset(m,x,ey0+1,ROOF,99); }
+  for(let y=ey0+2;y<=ey0+4;y++) for(let x=ex0+1;x<=ex0+8;x++) mset(m,x,y,WALL,99);
+  mset(m,ex0+2,ey0+3,WINDOW,99); mset(m,ex0+7,ey0+3,WINDOW,99);
+  mset(m,ex0+4,ey0+4,DOOR,99); m.meta.set(mkey(ex0+4,ey0+4),{t:'eu'});
+  mset(m,ex0+6,ey0+5,SIGN,99); m.meta.set(mkey(ex0+6,ey0+5),{t:'eusign'});
+  m.labels.push({x:(ex0+5)*T-T/2, y:ey0*T-6, text:'🇪🇺 EU — opening 2028 🚧'});
+  // trees & flowers on remaining grass
   for(let y=1;y<HUBH-1;y++) for(let x=1;x<HUBW-1;x++){
     if(mget(m,x,y)!==GRASS) continue;
     const r=h2(x,y);
-    // keep clear zone around paths
     if(r>0.96 && !nearType(m,x,y,PATH,1) && !nearType(m,x,y,DOOR,2)) mset(m,x,y,TREE);
     else if(r>0.86) mset(m,x,y,FLOWER);
   }
   // border trees
   for(let x=0;x<HUBW;x++){ mset(m,x,0,TREE); mset(m,x,HUBH-1,TREE); }
   for(let y=0;y<HUBH;y++){ mset(m,0,y,TREE); mset(m,HUBW-1,y,TREE); }
-  // EU Inc. construction site (left of the plaza, permanently 'coming soon')
-  const ex0=19, ey0=44;
-  for(let x=ex0+1;x<=ex0+8;x++){ mset(m,x,ey0,ROOF2,99); mset(m,x,ey0+1,ROOF,99); }
-  for(let y=ey0+2;y<=ey0+4;y++) for(let x=ex0+1;x<=ex0+8;x++) mset(m,x,y,WALL,99);
-  mset(m,ex0+2,ey0+3,WINDOW,99); mset(m,ex0+7,ey0+3,WINDOW,99);
-  mset(m,ex0+4,ey0+4,DOOR,99); m.meta.set(mkey(ex0+4,ey0+4),{t:'eu'});
-  mset(m,ex0+6,ey0+5,SIGN,99); m.meta.set(mkey(ex0+6,ey0+5),{t:'eusign'});
-  for(let x=ex0+1;x<=ex0+8;x++) if(mget(m,x,ey0+5)===GRASS && x!==ex0+6) mset(m,x,ey0+5,PATH);
-  m.labels.push({x:(ex0+5)*T-T/2, y:ey0*T-6, text:'🇪🇺 EU — opening 2028 🚧'});
-  // welcome sign + consultant
-  mset(m,36,49,SIGN,-2); m.meta.set(mkey(36,49),{t:'welcome'});
-  m.npcs.push({ x:44*T+16, y:49*T+24, name:'The Consultant', cols:{skin:'#e8b48c',shirt:'#3b3f52',hair:'#2a2a33',pants:'#23252f'}, kind:'consultant' });
-  m.labels.push({x:40*T+16, y:47*T-8, text:'⛲ INCORPORATION PLAZA'});
+  // welcome sign + consultant on the plaza
+  mset(m,33,35,SIGN,-2); m.meta.set(mkey(33,35),{t:'welcome'});
+  m.npcs.push({ x:46*T+16, y:34*T+24, name:'The Consultant', cols:{skin:'#e8b48c',shirt:'#3b3f52',hair:'#2a2a33',pants:'#23252f'}, kind:'consultant' });
+  m.labels.push({x:40*T+16, y:26*T-10, text:'⛲ INCORPORATION PLAZA'});
+  // plaza life: the queue outside Germany never gets shorter
+  const deSlot=HUB_POS[CINDEX.de];
+  if(deSlot){
+    const qx=(deSlot[0]+4)*T+16;
+    for(let q=0;q<4;q++)
+      m.npcs.push({x:qx, y:(deSlot[1]+5)*T+34+q*30, kind:'queuer',
+        cols:{skin:'#e0b090', shirt:['#6b7280','#4a5568','#7a6a58','#5a617a'][q], hair:'#3a3a44', pants:'#33364a'}});
+  }
+  m.npcs.push({x:35*T+16, y:25*T+28, kind:'celebrant', cols:{skin:'#e8b48c',shirt:'#e0a020',hair:'#5a3a1a',pants:'#33364a'}});
+  m.npcs.push({x:20*T, y:9*T+20,  patrol:[10*T,62*T], vx:34,  kind:'wanderer', cols:{skin:'#dca87e',shirt:'#7a4fb5',hair:'#2a2a33',pants:'#33364a'}});
+  m.npcs.push({x:55*T, y:54*T+20, patrol:[12*T,68*T], vx:-30, kind:'wanderer', cols:{skin:'#e8c49c',shirt:'#3f9d5a',hair:'#4a3320',pants:'#33364a'}});
+  m.pigeons=[]; for(let i=0;i<4;i++) m.pigeons.push({x:(30+i*5)*T, y:(29+(i%2)*6)*T, vx:0, vy:0, fly:0});
   return m;
 }
 function nearType(m,x,y,t,r){
@@ -894,6 +904,28 @@ function buildOffice(ci){
    GAME STATE
    ================================================================ */
 const SAVE_KEY='incorporation_save_v1';
+function lsGet(k,d){ try{ const v=localStorage.getItem(k); return v? JSON.parse(v):d; }catch(e){ return d; } }
+function lsSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+const ACH_DEF=[
+  ['first','First Blood (Legal)','incorporate anywhere'],
+  ['speed','Speedrun','incorporate in a single day'],
+  ['de','Endboss','complete Germany'],
+  ['de_zen','Zen Master','Germany without a breakdown'],
+  ['pt_name','It Is MY Name','Portugal: keep your own name'],
+  ['mt','The Patient One','complete Malta'],
+  ['broke','Out of Runway','go bankrupt on stamps'],
+  ['coffee','Caffeinated','8 coffees in one run'],
+  ['five','Jurisdiction Collector','incorporate in 5 countries'],
+  ['all','Serial Founder','incorporate in all 28'],
+];
+let ACH=lsGet('inc_ach',{}), DONE=lsGet('inc_done',{}), PB=lsGet('inc_pb',{});
+function award(id){
+  if(ACH[id]) return;
+  ACH[id]=1; lsSet('inc_ach',ACH);
+  const d=ACH_DEF.find(a=>a[0]===id);
+  if(G){ (G.newAch=G.newAch||[]).push(d?d[1]:id); toast('🏆 '+(d?d[1]:id)); }
+  sfx.ok();
+}
 let hubMap=null;
 let G=null;
 
@@ -903,7 +935,7 @@ function newGame(coName){
     days:0, money:30000, feesSpent:0, lockedCap:0, sanity:100,
     docs:[], progress:{}, vars:{}, visited:{}, bounces:{}, livingSpent:0,
     map:null, inOffice:-1, hubReturn:null,
-    px:40*T+16, py:52*T+8, dir:1, moving:false, animT:0,
+    px:40*T+16, py:36*T+8, dir:1, moving:false, animT:0,
     dlg:null, waiting:null, fade:null, toasts:[], floaters:[],
     coffees:[], pendingWait:0, brokeDown:false, done:null, t:0,
     moneyFlash:0, dayFlash:0, winSel:0,
@@ -911,7 +943,7 @@ function newGame(coName){
 }
 function initCoffees(g){
   g.coffees=[];
-  const spots=[[12,9],[30,9],[55,20],[70,9],[18,31],[62,31],[10,42],[47,20],[36,42],[68,42],[25,20],[58,42]];
+  const spots=[[12,9],[34,9],[58,9],[20,18],[47,18],[68,18],[7,30],[72,30],[40,44],[15,54],[52,54],[68,54],[30,62],[55,62]];
   for(const [x,y] of spots) g.coffees.push({x:x*T+16,y:y*T+20,taken:false});
 }
 
@@ -1039,10 +1071,21 @@ function runStep(ci, idx){
       if(G.progress[c.id]>=c.steps.length) completeCountry(ci);
       else sfx.ok();
     };
-    if(w>0) startWait(w, finish); else finish();
+    if(w>0){ startWait(w, finish); if(step.queue) G.waiting.queue=step.queue; } else finish();
   });
 }
 function completeCountry(ci){
+  const cc=COUNTRIES[ci];
+  DONE[cc.id]=1; lsSet('inc_done',DONE);
+  const cost=G.feesSpent+G.livingSpent;
+  if(!PB[cc.id] || G.days<PB[cc.id].d){ PB[cc.id]={d:G.days, c:cost}; lsSet('inc_pb',PB); }
+  award('first');
+  if(G.days<=1) award('speed');
+  if(cc.id==='de'){ award('de'); if(!G.brokeDown) award('de_zen'); }
+  if(cc.id==='mt') award('mt');
+  if(cc.id==='pt' && !G.renamed) award('pt_name');
+  if(Object.keys(DONE).length>=5) award('five');
+  if(Object.keys(DONE).length>=COUNTRIES.length) award('all');
   startFade(()=>{
     G.done=COUNTRIES[ci];
     G.scene='win';
@@ -1078,6 +1121,29 @@ function talkTo(n){
       {speaker:'The Consultant', text:"The scaffolding south-west of the plaza, next to the American building? The EU — one company form for all 27 countries. Opening 2028. The crane hasn't moved since I started working here."},
 
     ]);
+    return;
+  }
+  if(n.kind==='queuer'){
+    const L=[
+      {t:"Ich warte auf einen Notartermin. Seit März.", s:"I'm waiting for a notary appointment. Since March."},
+      {t:"Man sagt, drinnen gibt es Wartenummern. Ich habe noch keine gesehen.", s:"They say there are ticket numbers inside. I haven't seen one yet."},
+      {t:"Mein Sohn hat inzwischen in Delaware gegründet. Und schon verkauft.", s:"My son incorporated in Delaware in the meantime. And already sold."},
+      {t:"Die Schlange wird nicht kürzer. Sie wird nur älter.", s:"The queue doesn't get shorter. It only gets older."},
+    ];
+    startDialog([mkPage('Wartender Gründer', L[(Math.random()*L.length)|0])]);
+    return;
+  }
+  if(n.kind==='celebrant'){
+    startDialog([{speaker:'Fresh Delaware Founder', text:"Filed this morning. Approved before lunch. Now I'm just standing here — I don't know what to do with the rest of the week."}]);
+    return;
+  }
+  if(n.kind==='wanderer'){
+    const L=[
+      "Day 60. The register wants a letter from the bank. The bank wants a letter from the register.",
+      "I came here to build an app. I now own forty-one certified photocopies.",
+      "The consultant said 'read the signs'. The signs said 'fees'.",
+    ];
+    startDialog([{speaker:'Tired Founder', text:L[(Math.random()*L.length)|0]}]);
     return;
   }
   if(n.stepIdx!==undefined){ tryStep(n.stepIdx); return; }
@@ -1158,6 +1224,7 @@ window.addEventListener('keydown',e=>{
   if(G.scene==='win'){
     if(k==='ArrowUp'||k==='ArrowDown'||k.toLowerCase()==='w'||k.toLowerCase()==='s'){ G.winSel=1-G.winSel; sfx.step(); return; }
     if(k.toLowerCase()==='r'){ resetToTitle(); return; }
+    if(k.toLowerCase()==='n'){ G.notesOpen=!G.notesOpen; return; }
     if(k.toLowerCase()==='c'){
       const [g]=grade(G.days);
       const txt='I incorporated "'+G.coName+'" in '+G.done.flag+' '+G.done.name+' in '+G.days+' days — '+
@@ -1217,7 +1284,7 @@ function winConfirm(){
     return;
   }
   G.scene='play'; G.inOffice=-1; G.map=hubMap;
-  G.px=40*T+16; G.py=52*T+8; G.dir=1;
+  G.px=40*T+16; G.py=36*T+8; G.dir=1;
   toast('🎉 Incorporated. The plaza is yours.');
 }
 CV.addEventListener('click',()=>{ CV.focus(); if(!G) return; if(G.scene==='over'){ resetToTitle(); return; } if(G.scene==='win'){ winConfirm(); return; } if(G.dlg) advanceDialog(); });
@@ -1276,7 +1343,25 @@ function update(dt){
     for(const cf of G.coffees){
       if(cf.taken) continue;
       const dx=cf.x-G.px, dy=cf.y-(G.py-10);
-      if(dx*dx+dy*dy<22*22){ cf.taken=true; addSanity(6); floater('+6 sanity ☕','#a8e6a0'); toast('☕ Founder fuel. +6 sanity.'); sfx.coffee(); save(); }
+      if(dx*dx+dy*dy<22*22){ cf.taken=true; addSanity(6); G.coffeeCount=(G.coffeeCount||0)+1;
+        if(G.coffeeCount>=8) award('coffee');
+        floater('+6 sanity ☕','#a8e6a0'); toast('☕ Founder fuel. +6 sanity.'); sfx.coffee(); save(); }
+    }
+  }
+  // ambient life
+  if(G.inOffice<0){
+    for(const nn of G.map.npcs){
+      if(nn.patrol){
+        nn.x+=nn.vx*dt; nn.at=(nn.at||0)+dt; nn.moving=true; nn.dir=nn.vx>0?3:2;
+        if(nn.x<nn.patrol[0]||nn.x>nn.patrol[1]) nn.vx*=-1;
+      }
+    }
+    if(G.map.pigeons) for(const pg of G.map.pigeons){
+      const pdx=pg.x-G.px, pdy=pg.y-G.py;
+      if(pdx*pdx+pdy*pdy<3600 && pg.fly<=0){ pg.vx=Math.sign(pdx||1)*100; pg.vy=Math.sign(pdy||1)*70; pg.fly=0.6; }
+      if(pg.fly>0){ pg.fly-=dt; pg.x+=pg.vx*dt; pg.y+=pg.vy*dt; }
+      else if(Math.random()<0.008){ pg.x+=(Math.random()*2-1)*8; }
+      pg.x=clamp(pg.x,2*T,(HUBW-2)*T); pg.y=clamp(pg.y,2*T,(HUBH-2)*T);
     }
   }
   // exit tile
@@ -1305,7 +1390,7 @@ function tryMove(dx,dy){
 }
 function checkFail(){
   if(G.scene!=='play') return;
-  if(G.money < -2000){ G.scene='over'; clearSave(); sfx.sad(); return; }
+  if(G.money < -2000){ G.scene='over'; clearSave(); award('broke'); sfx.sad(); return; }
   if(G.sanity<=0 && !G.brokeDown && !G.dlg){
     G.brokeDown=true;
     startDialog([
@@ -1328,12 +1413,15 @@ function camera(){
   return {cx:Math.round(cx-ox), cy:Math.round(cy-oy)};
 }
 
+let SEAS=1;
+const SEAS_GRASS=['#63a955','#4c9a45','#96933f','#b9c1b9'];
+const SEAS_TREE=[['#2f7a3a','#3c8c46'],['#2c7434','#388440'],['#8a6a2a','#a07c30'],['#5a685e','#6a786e']];
 function drawTile(m,tx,ty,px,py){
   const t=m.t[ty*m.w+tx], r=h2(tx,ty);
   switch(t){
     case GRASS:
-      X.fillStyle='#57a04f'; X.fillRect(px,py,T,T);
-      X.fillStyle = r>0.5? '#4c8f45':'#63ae59';
+      X.fillStyle=SEAS_GRASS[SEAS]; X.fillRect(px,py,T,T);
+      X.fillStyle = r>0.5? 'rgba(0,0,0,0.08)':'rgba(255,255,255,0.08)';
       X.fillRect(px+((r*23)|0)%24+3, py+((r*47)|0)%24+3, 3,3);
       X.fillRect(px+((r*61)|0)%26+2, py+((r*89)|0)%26+2, 2,2);
       break;
@@ -1436,13 +1524,14 @@ function drawTile(m,tx,ty,px,py){
       X.strokeStyle='#5a4020'; X.lineWidth=2; X.strokeRect(px+4,py+3,24,13);
       break;
     case TREE:
-      X.fillStyle='#57a04f'; X.fillRect(px,py,T,T);
+      X.fillStyle=SEAS_GRASS[SEAS]; X.fillRect(px,py,T,T);
       X.fillStyle='#5a3a1a'; X.fillRect(px+13,py+18,6,12);
-      X.fillStyle='#2f7a3a'; X.beginPath(); X.arc(px+16,py+12,12,0,7); X.fill();
-      X.fillStyle='#3c8c46'; X.beginPath(); X.arc(px+12,py+9,7,0,7); X.fill();
+      X.fillStyle=SEAS_TREE[SEAS][0]; X.beginPath(); X.arc(px+16,py+12,12,0,7); X.fill();
+      X.fillStyle=SEAS_TREE[SEAS][1]; X.beginPath(); X.arc(px+12,py+9,7,0,7); X.fill();
       break;
     case FLOWER: {
-      X.fillStyle='#57a04f'; X.fillRect(px,py,T,T);
+      X.fillStyle=SEAS_GRASS[SEAS]; X.fillRect(px,py,T,T);
+      if(SEAS===3) break; // winter: no flowers, only paperwork
       const fc=['#e86a6a','#f0c040','#f0f0e8','#c88ae0'][((r*7)|0)%4];
       X.fillStyle=fc; X.fillRect(px+8,py+10,4,4); X.fillRect(px+20,py+18,4,4);
       X.fillStyle='#4c8f45'; X.fillRect(px+9,py+14,2,5); X.fillRect(px+21,py+22,2,5);
@@ -1515,6 +1604,7 @@ function drawPerson(px,py,dir,walkT,cols,moving,beard,beardCol){
 }
 
 function drawWorld(){
+  SEAS=Math.floor((((G&&G.days)||0)%84)/21);
   const {cx,cy}=camera(), m=G.map;
   X.fillStyle='#0b0d12'; X.fillRect(0,0,W,H);
   const x0=Math.max(0,Math.floor(cx/T)), y0=Math.max(0,Math.floor(cy/T));
@@ -1555,9 +1645,17 @@ function drawWorld(){
     }
   }
 
+  // pigeons
+  if(G.inOffice<0 && m.pigeons){
+    for(const pg of m.pigeons){
+      X.fillStyle='#8a90a4'; X.fillRect(pg.x-cx-3, pg.y-cy-4, 7, 5);
+      X.fillStyle='#6b7280'; X.fillRect(pg.x-cx+2, pg.y-cy-8, 4, 4);
+      X.fillStyle='#e0a020'; X.fillRect(pg.x-cx+6, pg.y-cy-6, 2, 1);
+    }
+  }
   // entities y-sorted
   const ents=[...m.npcs.map(n=>({y:n.y, draw:()=>{
-      drawPerson(n.x-cx, n.y-cy, 0, 0, n.cols, false);
+      drawPerson(n.x-cx, n.y-cy, n.dir||0, n.at||0, n.cols, !!n.patrol);
     }, n})),
     {y:G.py, draw:()=>{
       const hairC = G.days>110?'#a8a8a8':G.days>75?'#8a8378':G.days>45?'#6e5a44':'#5a3a1a';
@@ -1607,7 +1705,7 @@ function drawWorld(){
 }
 
 function drawEUSite(cx,cy){
-  const x0=19*T-cx, y0=44*T-cy;
+  const x0=40*T-cx, y0=20*T-cy;
   const bx=x0+T, bw=8*T;
   if(bx>W+240||bx+bw<-240||y0>H+240||y0<-300) return;
   const wallTop=y0+2*T, wallBot=y0+5*T;
@@ -1786,6 +1884,35 @@ function drawWaiting(){
   const ph=(frac*cycles)%1; // one day-night cycle
   const mix=(c1,c2,t)=>'rgb('+[0,1,2].map(i=>Math.round(c1[i]+(c2[i]-c1[i])*t)).join(',')+')';
   const DAYC=[116,168,214], DUSK=[196,110,66], NIGHT=[10,14,38];
+  if(wt.queue){
+    // the waiting hall: fluorescent purgatory
+    X.fillStyle='#28231d'; X.fillRect(0,0,W,H);
+    X.fillStyle='#1c1814'; X.fillRect(0,H*0.66,W,H*0.34);
+    X.fillStyle='rgba(255,250,220,0.05)';
+    for(let i=0;i<4;i++) X.fillRect(120+i*220,0,90,H*0.66);
+    // counter desk
+    X.fillStyle='#4a3a28'; X.fillRect(40,H*0.66-46,150,46);
+    X.fillStyle='#5a4a34'; X.fillRect(40,H*0.66-46,150,10);
+    // ticket board
+    X.fillStyle='#0a0a0a'; X.fillRect(W/2-170,54,340,76);
+    X.strokeStyle='#4a4f62'; X.lineWidth=2; X.strokeRect(W/2-169,55,338,74);
+    X.textAlign='center';
+    X.fillStyle='#ff4a3a'; X.font='bold 24px ui-monospace,Menlo,monospace';
+    X.fillText(wt.queue+': '+(13+Math.floor(frac*frac*820)), W/2, 88);
+    X.fillStyle='#f2e8cf'; X.font='bold 13px ui-monospace,Menlo,monospace';
+    X.fillText('YOUR NUMBER: 847', W/2, 116);
+    // the line, dwindling with agonizing slowness
+    const ahead=Math.max(0,Math.ceil((1-frac)*8));
+    for(let i=0;i<ahead;i++){
+      drawPerson(230+i*58, H*0.66+58, 2, 0,
+        {skin:'#d8a882', shirt:['#6b7280','#7a6a58','#4a5568','#5a617a'][i%4], hair:'#3a3a44', pants:'#33364a'}, false);
+    }
+    const qhairC = G.days>110?'#a8a8a8':G.days>75?'#8a8378':G.days>45?'#6e5a44':'#5a3a1a';
+    const qbl=Math.max(0,Math.min(9,((G.days-4)/10)|0));
+    drawPerson(230+ahead*58+16, H*0.66+58, 2, 0,
+      {skin:'#e8b48c', shirt:'#4a90d9', hair:qhairC, pants:'#33364a'}, false, qbl, G.days>75?'#7a7468':'#4a3320');
+    X.textAlign='left';
+  } else {
   let sky;
   if(ph<0.40) sky=mix(DAYC,DAYC,0);
   else if(ph<0.50) sky=mix(DAYC,DUSK,(ph-0.40)/0.10);
@@ -1830,6 +1957,7 @@ function drawWaiting(){
     X.fillText('z', bx-100-zt*30+i*14, by-28-zt*46-i*8);
   }
   X.globalAlpha=1;
+  }
   // counters
   X.textAlign='center';
   X.fillStyle='#f0c040'; X.font='bold 34px ui-monospace,Menlo,monospace';
@@ -1893,9 +2021,17 @@ function drawWin(){
   X.fillText(g, bx+bw-56, by+bh-41);
   X.fillStyle='#f0c040'; X.font='italic 13px ui-monospace,Menlo,monospace';
   X.fillText('Grade '+g+' — '+quip, W/2, 274);
+  if(G.newAch && G.newAch.length){
+    X.fillStyle='#7dc87d'; X.font='bold 12px ui-monospace,Menlo,monospace';
+    X.fillText('🏆 unlocked: '+G.newAch.join(' · '), W/2, 292);
+  }
+  if(Object.keys(DONE).length>=COUNTRIES.length){
+    X.fillStyle='#ffd766'; X.font='bold 14px ui-monospace,Menlo,monospace';
+    X.fillText('★ SERIAL FOUNDER — incorporated in all 28. Please seek help. ★', W/2, 292);
+  }
   const outro = c.outro || ('It took '+G.days+' days. Somewhere in Delaware, a founder did all of this during a single lunch break.');
   X.fillStyle='#c8cede'; X.font='12px ui-monospace,Menlo,monospace';
-  let oy=296;
+  let oy=(G.newAch&&G.newAch.length)||Object.keys(DONE).length>=COUNTRIES.length? 312:296;
   for(const line of wrapText(outro, 760, '12px ui-monospace,Menlo,monospace')){ X.fillText(line, W/2, oy); oy+=16; }
 
   // league table
@@ -1907,8 +2043,9 @@ function drawWin(){
   sorted.forEach((cc,i)=>{
     const col=(i/rows)|0, row=i%rows;
     const x=68+col*300, y=top+row*14;
-    X.fillStyle = cc===c? '#f0c040' : cc.id==='us'? '#7dc87d' : '#8a90a4';
-    X.fillText((cc===c?'▸ ':'  ')+cc.flag+' '+cc.name.padEnd(15).slice(0,15)+' '+String(cc.estDays).padStart(3)+'d ~'+fmtMoney(cc.estFees), x, y);
+    X.fillStyle = cc===c? '#f0c040' : DONE[cc.id]? '#7dc87d' : '#8a90a4';
+    const pb=PB[cc.id]? '  ✓'+PB[cc.id].d+'d' : '';
+    X.fillText((cc===c?'▸ ':'  ')+cc.flag+' '+cc.name.padEnd(14).slice(0,14)+' '+String(cc.estDays).padStart(3)+'d ~'+fmtMoney(cc.estFees)+pb, x, y);
   });
   X.textAlign='center';
   if(G.copied>0){ G.copied-=0.016;
@@ -1916,8 +2053,9 @@ function drawWin(){
     X.fillText('copied ✓', W-60, 20);
   } else {
     X.fillStyle='#5a617a'; X.font='11px ui-monospace,Menlo,monospace';
-    X.fillText('C — copy result', W-70, 20);
+    X.fillText('C — copy · N — field notes', W-110, 20);
   }
+  if(G.notesOpen) drawNotes(c);
   X.fillStyle='#f2e8cf'; X.font='bold 13px ui-monospace,Menlo,monospace';
   X.fillText('Play again?', W/2, H-52);
   const wopts=['Yes — found another startup','No — wander the plaza as a legal person'];
@@ -1926,6 +2064,37 @@ function drawWin(){
     X.font = i===G.winSel? 'bold 12px ui-monospace,Menlo,monospace':'12px ui-monospace,Menlo,monospace';
     X.fillText((i===G.winSel?'▸ ':'')+o, W/2, H-34+i*16);
   });
+  X.textAlign='left';
+}
+function drawNotes(c){
+  X.fillStyle='rgba(11,13,18,0.96)'; X.fillRect(40,30,W-80,H-60);
+  X.strokeStyle='#f0c040'; X.lineWidth=2; X.strokeRect(41,31,W-82,H-62);
+  X.textAlign='center';
+  X.fillStyle='#f0c040'; X.font='bold 15px ui-monospace,Menlo,monospace';
+  X.fillText(c.flag+' '+c.name+' — FIELD NOTES (all of it is real)', W/2, 60);
+  X.textAlign='left'; X.fillStyle='#c8cede'; X.font='12px ui-monospace,Menlo,monospace';
+  let ny=86;
+  for(const line of wrapText(c.tag, W-160, '12px ui-monospace,Menlo,monospace')){ X.fillText(line, 70, ny); ny+=16; }
+  ny+=10;
+  X.fillStyle='#f2e8cf'; X.font='bold 12px ui-monospace,Menlo,monospace';
+  X.fillText('The actual chain ('+(c.office||'')+'):', 70, ny); ny+=18;
+  X.font='11px ui-monospace,Menlo,monospace';
+  c.steps.forEach((st,i)=>{
+    const cost=typeof st.cost==='function'? st.cost({vars:{de:'GmbH'}}) : st.cost;
+    const cap=typeof st.capital==='function'? st.capital({vars:{de:'GmbH'}}) : st.capital;
+    let line=(i+1)+'. '+st.who;
+    if(cost) line+=' · '+fmtMoney(cost);
+    if(cap) line+=' · '+fmtMoney(cap)+' capital';
+    if(st.wait) line+=' · ~'+st.wait+' day'+(st.wait>1?'s':'');
+    if(st.doc) line+=' → '+st.doc;
+    X.fillStyle='#8a90a4';
+    X.fillText(line.slice(0,110), 70, ny); ny+=15;
+  });
+  ny+=8;
+  X.fillStyle='#5a617a'; X.font='italic 11px ui-monospace,Menlo,monospace';
+  X.fillText('Rules, fees and timelines as of 2025/26 — sources: the official registries and fee schedules of each country.', 70, ny);
+  X.textAlign='center'; X.fillStyle='#f0c040'; X.font='bold 11px ui-monospace,Menlo,monospace';
+  X.fillText('N — close', W/2, H-42);
   X.textAlign='left';
 }
 function drawOver(){
@@ -1960,6 +2129,14 @@ function drawTitle(){
   X.fillText('a bird\'s-eye adventure through company formation', W/2, 152);
   X.fillStyle='#5a617a'; X.font='12px ui-monospace,Menlo,monospace';
   X.fillText('28 jurisdictions · 1 startup dream · unlimited stamps', W/2, 176);
+  const na=Object.keys(ACH).length, nd=Object.keys(DONE).length;
+  if(na||nd){
+    X.fillStyle='#8a90a4'; X.font='bold 11px ui-monospace,Menlo,monospace';
+    X.fillText('🏆 '+na+'/'+ACH_DEF.length+' achievements · ✓ '+nd+'/28 jurisdictions conquered', W/2, 200);
+    const un=ACH_DEF.filter(a=>ACH[a[0]]).map(a=>a[1]).join(' · ');
+    if(un){ X.fillStyle='#5a617a'; X.font='10px ui-monospace,Menlo,monospace';
+      for(const [i,line] of wrapText(un, 700, '10px ui-monospace,Menlo,monospace').entries()) X.fillText(line, W/2, 216+i*13); }
+  }
   X.textAlign='left';
 }
 
