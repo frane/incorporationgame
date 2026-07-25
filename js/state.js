@@ -360,6 +360,9 @@ window.addEventListener('keyup',e=>{ KEY[e.key.toLowerCase()]=false; });
 if(('ontouchstart' in window) || navigator.maxTouchPoints>0 || /debug=touch/.test(location.search)){
   const tui=document.getElementById('touchUI');
   tui.style.display='block';
+  document.documentElement.classList.add('touch');
+  const ft=document.getElementById('foot');
+  if(ft) ft.innerHTML='tap ▲▼◀▶ to move · E to talk · made with ♥ and AI by <a href="https://x.com/fbandov" target="_blank" rel="noopener" style="color:#8a90a4;">@fbandov</a>';
   window.addEventListener('pointerdown',()=>ac(),{passive:true});
   for(const b of tui.querySelectorAll('#dpad .tb')){
     const k=b.dataset.k;
