@@ -263,7 +263,7 @@ function useMeta(meta){
     sfx.deny();
     startDialog([
       {speaker:'🇪🇺 EU — Construction Site', text:"Behind this fence: the legendary '28th regime' — ONE European company form. One filing, one language, one register, valid in all 27 member states."},
-      {speaker:'🇪🇺 EU — Construction Site', text:"Expected opening: 2028. The scaffolding has been load-bearing since roughly the Societas Europaea of 2004."},
+      {speaker:'🇪🇺 EU — Construction Site', text:"Expected opening: 2028. The scaffolding went up around the Societas Europaea of 2004. It has not come down."},
       {speaker:'⚠ Site Notice', text:"NO ENTRY. Hard hats required. Unanimity required. Please check back... eventually."},
     ]);
   }

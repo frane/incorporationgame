@@ -113,7 +113,7 @@ const COUNTRIES = [
       {t:"Η αμοιβή μου: €1.200. Περιλαμβάνει φιλοξενία. Ο καφές είναι εξαιρετικός και το τιμολόγιο αληθινό.", s:"My fee: €1,200. It includes hospitality. The coffee is excellent and the invoice is real."} ],
       cost:1200, san:5, doc:'Συμφωνία ανάθεσης' },
     { who:'Έγκριση ονόματος', lines:[
-      {t:"Ο Έφορος εξετάζει το όνομά σας για μοναδικότητα, ευπρέπεια και — πώς να το θέσουμε — αίσθηση. Οι λόγοι απόρριψης δεν γνωστοποιούνται πάντα.", s:"The Registrar reviews your name for uniqueness, decency and — how to put it — vibes. Rejection reasons are not always disclosed."},
+      {t:"Ο Έφορος εξετάζει το όνομά σας για μοναδικότητα, ευπρέπεια και για κριτήρια δικά του. Οι λόγοι απόρριψης δεν γνωστοποιούνται πάντα.", s:"The Registrar reviews your name for uniqueness, decency, and criteria of his own. Rejection reasons are not always disclosed."},
       {t:"Η κανονική ουρά: εβδομάδες. Η ταχεία: €30. Όλοι πληρώνουν τα €30.", s:"The regular queue: weeks. The accelerated one: €30. Everyone pays the €30."} ],
       cost:30, wait:10, san:5, doc:'Έγκριση ονόματος' },
     { who:'Σύνταξη καταστατικού', lines:[
