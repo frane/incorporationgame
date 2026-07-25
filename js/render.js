@@ -661,8 +661,6 @@ function drawWin(){
     X.fillText((i===G.winSel?'▸ ':'')+o, W/2, H-34+i*16);
   });
   X.textAlign='left';
-  X.fillStyle='#3a4054'; X.font='11px ui-monospace,Menlo,monospace';
-  X.fillText('Made with ♥ and AI by @fbandov', 14, H-10);
 }
 function drawNotes(c){
   X.fillStyle='rgba(11,13,18,0.96)'; X.fillRect(40,30,W-80,H-60);
@@ -734,8 +732,6 @@ function drawTitle(){
   }
   X.fillStyle='#1b1e2b'; X.fillRect(0,H-70,W,70);
   X.textAlign='center';
-  X.fillStyle='#5a617a'; X.font='11px ui-monospace,Menlo,monospace';
-  X.fillText('Made with ♥ and AI by @fbandov', W/2, H-28);
   X.fillStyle='#f0c040'; X.font='bold 58px ui-monospace,Menlo,monospace';
   X.fillText('INCORPORATION', W/2, 120);
   X.fillStyle='#8a90a4'; X.font='14px ui-monospace,Menlo,monospace';
