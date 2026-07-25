@@ -141,7 +141,7 @@ function wrapText(str, maxW, font){ X.font=font; const words=String(str).split('
    "yours"), wait (days), san (sanity damage), doc, choice
    ================================================================ */
 const COUNTRIES = [
-{ id:'us', name:'USA (Delaware)', flag:'🇺🇸', entity:'C-Corp', estDays:1, roof:0, office:'Delaware Division of Corporations, Dover', bs:'colonial', wc:'#f2efe6', rc:['#d9b23c','#ad8a1f'],
+{ id:'us', name:'USA (Delaware)', flag:'🇺🇸', entity:'C-Corp', estDays:1, roof:0, office:'Delaware Division of Corporations, Dover', bs:'colonial', wc:'#f2efe6', rc:['#d9b23c','#ad8a1f'], src:[["Delaware Div. of Corporations - fees & expedite", "https://corp.delaware.gov/expserv/"], ["Franchise tax calculation methods", "https://corp.delaware.gov/frtaxcalc/"]],
   tag:"1 day, ~$400, online. No notary, no minimum capital, no bank certificate.",
   outro:"One day, online. Next March, a franchise-tax notice arrives: $85,165 under the default calculation. Recomputed under the other method the same law allows: about $450. The recomputation is your job. Foreign founders apply for their federal tax ID by fax.",
   steps:[
@@ -157,7 +157,7 @@ const COUNTRIES = [
       "*click* — approved." ],
       cost:289, wait:1, doc:'Certificate of Incorporation' } ] },
 
-{ id:'at', name:'Austria', flag:'🇦🇹', entity:'GmbH', estDays:30, roof:1, office:'Firmenbuch — Landesgericht Wien', bs:'alpine', wc:'#f2ede2', rc:['#7a6a58','#5e5044'],
+{ id:'at', name:'Austria', flag:'🇦🇹', entity:'GmbH', estDays:30, roof:1, office:'Firmenbuch — Landesgericht Wien', bs:'alpine', wc:'#f2ede2', rc:['#7a6a58','#5e5044'], src:[["WKO Gruenderservice / NeuFoeG", "https://www.wko.at/gruendung"], ["USP - GmbH-Gruendung offiziell", "https://www.usp.gv.at"]],
   tag:"€10,000 minimum capital (halved in 2024 — they're very proud). Do the steps in the WRONG ORDER and you forfeit the €493 fee waiver. Minimum tax: €500/year, even at zero revenue.",
   steps:[
     { who:'WKO Gründerservice', lines:[
@@ -183,7 +183,7 @@ const COUNTRIES = [
       {t:"Und Sie sind jetzt Pflichtmitglied der Wirtschaftskammer. Pro Gewerbeberechtigung eine Grundumlage. Servus und willkommen!", s:"And you are now a mandatory member of the Economic Chamber. One base levy per trade licence. Servus and welcome!"} ],
       cost:650, wait:6, san:6, doc:'Steuernummer' } ] },
 
-{ id:'be', name:'Belgium', flag:'🇧🇪', entity:'SRL / BV', estDays:10, roof:2, office:'Banque-Carrefour des Entreprises, Bruxelles', bs:'brick', wc:'#9a5a40', rc:['#4a4a52','#38383e'],
+{ id:'be', name:'Belgium', flag:'🇧🇪', entity:'SRL / BV', estDays:10, roof:2, office:'Banque-Carrefour des Entreprises, Bruxelles', bs:'brick', wc:'#9a5a40', rc:['#4a4a52','#38383e'], src:[["Moniteur belge publication tariffs", "https://www.ejustice.just.fgov.be"], ["SPF Economie - guichets d'entreprises", "https://economie.fgov.be"]],
   tag:"No minimum capital! Instead: a legally mandated 2-year financial plan, kept sealed by the notary — and reopened only if you go bankrupt within 3 years, as evidence against you.",
   steps:[
     { who:'Comptable Mme Peeters', lines:[
@@ -210,7 +210,7 @@ const COUNTRIES = [
       {t:"Déclarez vos bénéficiaires effectifs dans les 30 jours. Puis reconfirmez chaque année que rien n'a changé. Même si rien n'a changé. SURTOUT si rien n'a changé.", s:"Declare your beneficial owners within 30 days. Then reconfirm every year that nothing changed. Even if nothing changed. ESPECIALLY if nothing changed."} ],
       wait:2, doc:'Déclaration UBO' } ] },
 
-{ id:'bg', name:'Bulgaria', flag:'🇧🇬', entity:'EOOD', estDays:7, roof:3, office:'Агенция по вписванията — Търговски регистър, София', bs:'plaster', wc:'#e8c8b0', rc:['#b0563c','#8a3f2a'],
+{ id:'bg', name:'Bulgaria', flag:'🇧🇬', entity:'EOOD', estDays:7, roof:3, office:'Агенция по вписванията — Търговски регистър, София', bs:'plaster', wc:'#e8c8b0', rc:['#b0563c','#8a3f2a'], src:[["Registry Agency portal", "https://portal.registryagency.bg"], ["Registry Agency", "https://www.registryagency.bg"]],
   tag:"Capital: €1. The bank account needed to deposit it: €30 — then it gets closed after registration and you redo the KYC. The EU's most affordable ambition.",
   steps:[
     { who:'Банков служител', lines:[
@@ -225,7 +225,7 @@ const COUNTRIES = [
       {t:"Регистрирано! ЕИК издаден. Сега затворете набирателната сметка и отворете истинска — с изцяло ново KYC, разбира се.", s:"Registered! Company ID issued. Now close the capital-raising account and open a real one — with entirely fresh KYC, of course."} ],
       cost:28, wait:4, san:4, doc:'ЕИК номер' } ] },
 
-{ id:'hr', name:'Croatia', flag:'🇭🇷', entity:'d.o.o.', estDays:15, roof:4, office:'Trgovački sud u Zagrebu — Sudski registar', bs:'medit', wc:'#f0e6d2', rc:['#c0563a','#96422c'],
+{ id:'hr', name:'Croatia', flag:'🇭🇷', entity:'d.o.o.', estDays:15, roof:4, office:'Trgovački sud u Zagrebu — Sudski registar', bs:'medit', wc:'#f0e6d2', rc:['#c0563a','#96422c'], src:[["HITRO.HR", "https://www.hitro.hr"], ["START online formation", "https://start.gov.hr"]],
   tag:"The one-stop shop is named HITRO — 'fast'. It has six stops, and its own website admits it does not replace the notary.",
   steps:[
     { who:'Porezna uprava', lines:[
@@ -247,7 +247,7 @@ const COUNTRIES = [
       {t:"Reforma znači: besplatno plaćate članstvo koje ne možete odbiti. Dobrodošli!", s:"Reform means: you pay nothing for the membership you cannot refuse. Welcome!"} ],
       wait:2, doc:'HGK članstvo' } ] },
 
-{ id:'cy', name:'Cyprus', flag:'🇨🇾', entity:'LTD', estDays:25, roof:5, office:'Έφορος Εταιρειών (Registrar of Companies), Λευκωσία', bs:'white', wc:'#f4f1e8', rc:['#3f6fb5','#2d5390'],
+{ id:'cy', name:'Cyprus', flag:'🇨🇾', entity:'LTD', estDays:25, roof:5, office:'Έφορος Εταιρειών (Registrar of Companies), Λευκωσία', bs:'white', wc:'#f4f1e8', rc:['#3f6fb5','#2d5390'], src:[["Registrar of Companies - incorporation", "https://www.companies.gov.cy/en/"], ["Annual levy abolished 2024", "https://www.harneys.com/our-blogs/regulatory/cyprus-abolishes-annual-company-levy-to-support-business-community/"]],
   tag:"DIY incorporation is legally impossible — only a Cyprus advocate may swear the founding declaration. Your constitution will be in Greek, whether you read Greek or not.",
   steps:[
     { who:'Δικηγόρος Ανδρέου', lines:[
@@ -267,7 +267,7 @@ const COUNTRIES = [
       {t:"Και κάτι ακόμη: κάθε κυπριακή εταιρεία χρειάζεται πλήρη ετήσιο έλεγχο. Για πάντα. Και οι ελεγκτές σερβίρουν εξαιρετικό καφέ.", s:"One more thing: every Cyprus company needs a full annual audit. Forever. The auditors also serve excellent coffee."} ],
       cost:265, wait:8, doc:'Πιστοποιητικό σύστασης' } ] },
 
-{ id:'cz', name:'Czechia', flag:'🇨🇿', entity:'s.r.o.', estDays:16, roof:6, office:'Městský soud v Praze — Obchodní rejstřík', bs:'plaster', wc:'#efd9a8', rc:['#b0563c','#8a3f2a'],
+{ id:'cz', name:'Czechia', flag:'🇨🇿', entity:'s.r.o.', estDays:16, roof:6, office:'Městský soud v Praze — Obchodní rejstřík', bs:'plaster', wc:'#efd9a8', rc:['#b0563c','#8a3f2a'], src:[["Obchodni rejstrik / justice.cz", "https://or.justice.cz"], ["Trade licence for a not-yet company", "https://en.brno.cz/w/trade-licence-for-czech-legal-persons-"]],
   tag:"The trade licence is issued to a company that doesn't exist yet, and expires if the company isn't born within 90 days. Minimum capital: 1 koruna. Statutory-minimum articles: court fee €0. Custom articles: CZK 2,700.",
   steps:[
     { who:'Majitel nemovitosti', lines:[
@@ -295,7 +295,7 @@ const COUNTRIES = [
       {t:"Do 15 dnů se přihlaste k dani z příjmů. Přes datovou schránku, samozřejmě. Vítejte v Česku!", s:"Register for income tax within 15 days. Via the data box, of course. Welcome to Czechia!"} ],
       wait:2, san:4, doc:'Datová schránka' } ] },
 
-{ id:'dk', name:'Denmark', flag:'🇩🇰', entity:'ApS', estDays:6, roof:7, office:'Erhvervsstyrelsen, København', bs:'nordic', wc:'#8a3f34', rc:['#3a3a40','#2a2a30'],
+{ id:'dk', name:'Denmark', flag:'🇩🇰', entity:'ApS', estDays:6, roof:7, office:'Erhvervsstyrelsen, København', bs:'nordic', wc:'#8a3f34', rc:['#3a3a40','#2a2a30'], src:[["Erhvervsstyrelsen - fees", "https://erhvervsstyrelsen.dk/gebyrer-og-takster"], ["Virk.dk", "https://virk.dk"]],
   tag:"Fully digital: Virk needs MitID, MitID needs a CPR number, a CPR number needs a Danish address.",
   steps:[
     { who:'MitID-skranken', lines:[
@@ -310,7 +310,7 @@ const COUNTRIES = [
       {t:"Godkendt kl. 14:03. CVR-nummer udstedt. Husk: et digitalt bogføringssystem er lovpligtigt — papirregnskab er reelt ulovligt. Hav en god dag.", s:"Approved at 14:03. CVR number issued. Remember: a digital bookkeeping system is required by law — paper ledgers are effectively illegal. Have a nice day."} ],
       cost:90, doc:'CVR-nummer' } ] },
 
-{ id:'ee', name:'Estonia', flag:'🇪🇪', entity:'OÜ', estDays:50, roof:1, office:'Äriregister (RIK), Tallinn', bs:'nordic', wc:'#b0a890', rc:['#4a4a52','#38383e'],
+{ id:'ee', name:'Estonia', flag:'🇪🇪', entity:'OÜ', estDays:50, roof:1, office:'Äriregister (RIK), Tallinn', bs:'nordic', wc:'#b0a890', rc:['#4a4a52','#38383e'], src:[["e-Residency - costs & timeline", "https://learn.e-resident.gov.ee"], ["e-Business Register (RIK)", "https://ariregister.rik.ee"]],
   tag:"15-minute online incorporation — after 6–8 weeks waiting for the physical ID card and an in-person fingerprint appointment.",
   outro:"Incorporation time: 15 minutes 33 seconds — the national record, set after a seven-week pilgrimage for a plastic card, plus a lifelong subscription to a licensed Estonian human. The e-state's own banks said no, so you bank abroad. Estonia is proud of you. The blockchain remembers.",
   steps:[
@@ -331,7 +331,7 @@ const COUNTRIES = [
       "The official guidance now recommends... a foreign fintech." ],
       wait:5, san:6, doc:'Fintech Account' } ] },
 
-{ id:'fi', name:'Finland', flag:'🇫🇮', entity:'Oy', estDays:12, roof:2, office:'Patentti- ja rekisterihallitus (PRH), Helsinki', bs:'nordic', wc:'#8a3f34', rc:['#3a3a40','#2a2a30'],
+{ id:'fi', name:'Finland', flag:'🇫🇮', entity:'Oy', estDays:12, roof:2, office:'Patentti- ja rekisterihallitus (PRH), Helsinki', bs:'nordic', wc:'#8a3f34', rc:['#3a3a40','#2a2a30'], src:[["PRH price list & 2026 paper ban", "https://www.prh.fi/en/price-lists"], ["Vero registers", "https://www.vero.fi"]],
   tag:"Share capital: €0 — but pay in even one euro and bank-proof requirements activate. Paper filing costs €140 more, and from 2026 is simply illegal. The silences are part of the process.",
   steps:[
     { who:'PRH nimipalvelu', lines:[
@@ -350,7 +350,7 @@ const COUNTRIES = [
       {t:"Ilmoittakaa tosiasialliset edunsaajanne. Ilmaista. Hiljaisuus maksaa €300, ja lopulta poistamme teidät rekisteristä.", s:"Declare your beneficial owners. Free. Silence costs €300, and eventually we remove you from the register."} ],
       wait:2, san:4, doc:'Edunsaajailmoitus' } ] },
 
-{ id:'fr', name:'France', flag:'🇫🇷', entity:'SAS', estDays:21, roof:3, office:'Greffe du Tribunal de commerce de Paris', bs:'mansard', wc:'#e8e0d0', rc:['#5a6478','#454e60'],
+{ id:'fr', name:'France', flag:'🇫🇷', entity:'SAS', estDays:21, roof:3, office:'Greffe du Tribunal de commerce de Paris', bs:'mansard', wc:'#e8e0d0', rc:['#5a6478','#454e60'], src:[["JAL tariff by ministerial decree", "https://entreprendre.service-public.gouv.fr/actualites/A17978"], ["INPI Guichet Unique", "https://procedures.inpi.fr"]],
   tag:"Your startup must debut in a printed newspaper — tariff fixed by ministerial decree. The mandatory one-stop portal launched so broken the state legalized an official backup procedure for it.",
   outro:"You hold the sacred Kbis. In France this scroll opens every door — and every door will demand it again, freshly reprinted, never older than three months. Your capital was frozen the whole time, waiting for the Kbis that needed the capital. A perfect circle. A French circle.",
   steps:[
@@ -380,7 +380,7 @@ const COUNTRIES = [
       {t:"Voici votre extrait Kbis. Le parchemin sacré. Banques, bailleurs, fournisseurs — tous exigeront le Kbis, toujours frais, jamais plus vieux que trois mois.", s:"Here is your Kbis extract. The sacred scroll. Banks, landlords, suppliers — all will demand the Kbis, always fresh, never older than three months."} ],
       cost:59, wait:5, doc:'Extrait Kbis ✨' } ] },
 
-{ id:'de', name:'Germany', flag:'🇩🇪', entity:'UG / GmbH', estDays:90, roof:0, office:'Amtsgericht Charlottenburg — Handelsregister, Berlin', bs:'fachwerk', wc:'#f0e8d8', rc:['#8a4a3a','#6e3a2c'],
+{ id:'de', name:'Germany', flag:'🇩🇪', entity:'UG / GmbH', estDays:90, roof:0, office:'Amtsgericht Charlottenburg — Handelsregister, Berlin', bs:'fachwerk', wc:'#f0e8d8', rc:['#8a4a3a','#6e3a2c'], src:[["GmbHG (5a UG, 11 liability)", "https://www.gesetze-im-internet.de/gmbhg/"], ["BeurkG 13 - the read-aloud law", "https://www.gesetze-im-internet.de/beurkg/__13.html"], ["Handelsregister fee schedule (HRegGebV)", "https://www.gesetze-im-internet.de/hreggebv/"]],
   tag:"The notary reads the deed aloud (§13 BeurkG). Until registration you are personally liable (§11 II GmbHG). The online tax portal mails its activation code on paper.",
   outro:"Roughly a quarter of a year. Between notarization and registration you were personally and unlimitedly liable — precisely during the window you had to act. Your data now lives in the Handelsregister, the Transparenzregister and the Gewerberegister; none of them talk to each other. Somewhere in Delaware, a founder incorporated, raised a seed round and pivoted twice while you waited for ELSTER's letter.",
   steps:[
@@ -429,7 +429,7 @@ const COUNTRIES = [
       {t:"Und der Rundfunkbeitrag: €6,12 im Monat pro Betriebsstätte. Auch ohne Radio. Fragen Sie nicht. — Sie sind hiermit... eingetragen. Willkommen in Deutschland!", s:"And the broadcast fee: €6.12 a month per office. Even without a radio. Don't ask. — You are hereby... registered. Welcome to Germany!"} ],
       cost:20, wait:2, doc:'Transparenzregister-Eintrag' } ] },
 
-{ id:'gr', name:'Greece', flag:'🇬🇷', entity:'IKE', estDays:14, roof:4, office:'Γενικό Εμπορικό Μητρώο (Γ.Ε.ΜΗ.), Αθήνα', bs:'white', wc:'#f6f3ec', rc:['#3f6fb5','#2d5390'],
+{ id:'gr', name:'Greece', flag:'🇬🇷', entity:'IKE', estDays:14, roof:4, office:'Γενικό Εμπορικό Μητρώο (Γ.Ε.ΜΗ.), Αθήνα', bs:'white', wc:'#f6f3ec', rc:['#3f6fb5','#2d5390'], src:[["e-YMS one-stop portal (18 euro)", "https://eyms.businessportal.gr/cost"], ["e-EFKA contributions", "https://www.e-efka.gov.gr"]],
   tag:"An €18 company in one hour, online, no notary — genuinely real. Then €245/month social insurance from day one and €100/year for the registry to remember you exist.",
   steps:[
     { who:'ΔΟΥ (Εφορία)', queue:'ΕΞΥΠΗΡΕΤΕΙΤΑΙ ΤΩΡΑ', lines:[
@@ -451,7 +451,7 @@ const COUNTRIES = [
       {t:"Πιστοποιήστε την καταβολή του κεφαλαίου εντός ενός μηνός. Και μην ξεχνάτε: €100 τον χρόνο για να διατηρεί το ΓΕΜΗ τον φάκελό σας.", s:"Certify the capital payment within one month. And don't forget: €100 a year for GEMI to maintain your file."} ],
       cost:100, wait:3, doc:'Βεβαίωση ΓΕΜΗ' } ] },
 
-{ id:'hu', name:'Hungary', flag:'🇭🇺', entity:'Kft.', estDays:8, roof:5, office:'Fővárosi Törvényszék Cégbírósága, Budapest', bs:'plaster', wc:'#e8d9a8', rc:['#b0563c','#8a3f2a'],
+{ id:'hu', name:'Hungary', flag:'🇭🇺', entity:'Kft.', estDays:8, roof:5, office:'Fővárosi Törvényszék Cégbírósága, Budapest', bs:'plaster', wc:'#e8d9a8', rc:['#b0563c','#8a3f2a'], src:[["e-cegjegyzek (company register)", "https://www.e-cegjegyzek.hu"], ["Registration fees abolished (2017)", "https://www.schoenherr.eu/content/hungary-registration-fees-for-company-establishment-abolished/"]],
   tag:"State duty: zero forints. Filing without a lawyer: illegal. The 'free' procedure therefore costs €800. Genuinely fast anyway — and a late questionnaire reply can delete your tax number.",
   steps:[
     { who:'Dr. Kovács ügyvéd', lines:[
@@ -471,7 +471,7 @@ const COUNTRIES = [
       {t:"És a kamarai REGISZTRÁCIÓ kötelező — évi 5000 forint. A kamarai TAGSÁG önkéntes. Regisztrálnia és fizetnie kell; tagnak lennie nem. Viszlát!", s:"And chamber REGISTRATION is mandatory — HUF 5,000 a year. Chamber MEMBERSHIP is voluntary. You must register and pay; being a member, no. Goodbye!"} ],
       cost:13, wait:2, doc:'Bankszámla + regisztráció' } ] },
 
-{ id:'ie', name:'Ireland', flag:'🇮🇪', entity:'LTD', estDays:8, roof:2, office:'Companies Registration Office (CRO), Dublin', bs:'pub', wc:'#3f7a48', rc:['#3a3a40','#2a2a30'],
+{ id:'ie', name:'Ireland', flag:'🇮🇪', entity:'LTD', estDays:8, roof:2, office:'Companies Registration Office (CRO), Dublin', bs:'pub', wc:'#3f7a48', rc:['#3a3a40','#2a2a30'], src:[["CRO - incorporation", "https://www.cro.ie"], ["Revenue - VAT registration", "https://www.revenue.ie"]],
   tag:"€50 to incorporate. A one-person company needs two officers — the sole director must recruit a second human to be secretary. No EEA director? Buy a €25,000 bond insuring the state against your own future fines.",
   steps:[
     { who:'CRO Desk', lines:[
@@ -492,7 +492,7 @@ const COUNTRIES = [
       "Missing it: a fine up to €500,000 on indictment." ],
       wait:1, doc:'RBO Filing' } ] },
 
-{ id:'it', name:'Italy', flag:'🇮🇹', entity:'S.r.l.', estDays:25, roof:3, office:'Registro delle Imprese — Camera di Commercio, Roma', bs:'medit', wc:'#e8c89a', rc:['#c0563a','#96422c'],
+{ id:'it', name:'Italy', flag:'🇮🇹', entity:'S.r.l.', estDays:25, roof:3, office:'Registro delle Imprese — Camera di Commercio, Roma', bs:'medit', wc:'#e8c89a', rc:['#c0563a','#96422c'], src:[["Registro delle Imprese", "https://www.registroimprese.it"], ["The 309.87 euro book-stamping tax", "https://fiscomania.com/tassa-annuale-vidimazione-libri-sociali/"]],
   tag:"A €309.87/year tax for stamping the corporate books — that's 600,000 lire converted to the cent. The lira died in 2002; the tax is immortal. The espresso, to be fair, is excellent.",
   steps:[
     { who:'Agenzia delle Entrate', lines:[
@@ -515,7 +515,7 @@ const COUNTRIES = [
       {t:"Perché €309,87? Sono 600.000 lire, convertite al centesimo. La lira è morta nel 2002.", s:"Why €309.87? It is 600,000 lire, converted to the cent. The lira died in 2002."} ],
       cost:430, wait:3, san:5, doc:'Iscrizione camerale' } ] },
 
-{ id:'lv', name:'Latvia', flag:'🇱🇻', entity:'SIA', estDays:7, roof:6, office:'Uzņēmumu reģistrs, Rīga', bs:'nordic', wc:'#a08858', rc:['#4a4a52','#38383e'],
+{ id:'lv', name:'Latvia', flag:'🇱🇻', entity:'SIA', estDays:7, roof:6, office:'Uzņēmumu reģistrs, Rīga', bs:'nordic', wc:'#a08858', rc:['#4a4a52','#38383e'], src:[["Uznemumu registrs - SIA", "https://www.ur.gov.lv"], ["VID e-services", "https://www.vid.gov.lv"]],
   tag:"€1 capital, €20 state fee. One €1-company per person. Under €50,000, proof of payment is a form you sign yourself.",
   steps:[
     { who:'eParaksts galds', lines:[
@@ -530,7 +530,7 @@ const COUNTRIES = [
       {t:"Kapitāla pierādījums? Zem €50.000 pietiek ar jūsu parakstu uz veidlapas KR4, ka samaksājāt. Mēs jums uzticamies. Oficiāli.", s:"Proof of capital? Under €50,000, your signature on form KR4 stating you paid suffices. We trust you. Officially."} ],
       cost:20, capital:1, wait:4, doc:'Reģistrācijas apliecība' } ] },
 
-{ id:'lt', name:'Lithuania', flag:'🇱🇹', entity:'UAB', estDays:10, roof:7, office:'VĮ Registrų centras, Vilnius', bs:'nordic', wc:'#c8a858', rc:['#4a4a52','#38383e'],
+{ id:'lt', name:'Lithuania', flag:'🇱🇹', entity:'UAB', estDays:10, roof:7, office:'VĮ Registrų centras, Vilnius', bs:'nordic', wc:'#c8a858', rc:['#4a4a52','#38383e'], src:[["Registru centras", "https://www.registrucentras.lt"], ["VLKK - the language commission", "https://vlkk.lt"]],
   tag:"Your company name must be approved by the State Commission of the Lithuanian Language. Foreign words: rejected. Then the bank wants a registered company and the register wants a bank deposit.",
   steps:[
     { who:'Kalbos komisija (VLKK)', lines:(g)=>[
@@ -548,7 +548,7 @@ const COUNTRIES = [
       {t:"Dar dvi santrumpos: akcininkai — į JADIS, naudos gavėjai — į JANGIS, per 10 darbo dienų. Bankas nebaigs jūsų pažinimo be jų. Sėkmės!", s:"Two more acronyms: shareholders into JADIS, beneficial owners into JANGIS, within 10 working days. The bank won't finish 'knowing you' without them. Good luck!"} ],
       wait:2, doc:'JADIS + JANGIS' } ] },
 
-{ id:'lu', name:'Luxembourg', flag:'🇱🇺', entity:'SARL', estDays:35, roof:0, office:'Registre de Commerce et des Sociétés (RCS), Luxembourg', bs:'mansard', wc:'#e8e0d0', rc:['#5a6478','#454e60'],
+{ id:'lu', name:'Luxembourg', flag:'🇱🇺', entity:'SARL', estDays:35, roof:0, office:'Registre de Commerce et des Sociétés (RCS), Luxembourg', bs:'mansard', wc:'#e8e0d0', rc:['#5a6478','#454e60'], src:[["Guichet.lu - SARL", "https://guichet.public.lu/en/entreprises/creation-developpement/forme-juridique/societe-capitaux/sarl.html"], ["Business permit (autorisation)", "https://guichet.public.lu"]],
   tag:"The permit needs a manager already running the company; the bank needs the permit; the notary needs the bank; the registry needs the notary. Meanwhile your €12,000 sits frozen, waiting for everyone.",
   steps:[
     { who:"Ministère de l'Économie", lines:[
@@ -570,7 +570,7 @@ const COUNTRIES = [
       {t:"Les consultants appellent la cotisation 'un impôt caché en espèces'. Nous l'appelons tradition. Wëllkomm!", s:"Consultants call the dues 'a hidden cash tax'. We call it tradition. Welcome!"} ],
       cost:185, wait:4, doc:'Extrait RCS' } ] },
 
-{ id:'mt', name:'Malta', flag:'🇲🇹', entity:'LTD', estDays:50, roof:1, office:'Malta Business Registry, Żejtun', bs:'stone', wc:'#e0cf9e', rc:['#c8b878','#a89858'],
+{ id:'mt', name:'Malta', flag:'🇲🇹', entity:'LTD', estDays:50, roof:1, office:'Malta Business Registry, Żejtun', bs:'stone', wc:'#e0cf9e', rc:['#c8b878','#a89858'], src:[["MBR registration & fee structure", "https://mbr.mt/registration-and-fee-structure/"], ["Audit exemption via LN 139/2025", "https://kpmg.com/mt/en/home/insights/2025/08/malta-audit-exemption-rules.html"]],
   tag:"The company takes days; the bank account takes 3–12 months, or never. Registration fees scale with the capital you merely DECLARED. Audit exemption depends on your shareholders' school certificates.",
   outro:"The company took under a week. The bank account took the rest of your youth. Corporate tax is 35% — the EU's highest — but shareholders reclaim six-sevenths after dividends, paid to the bank account you may never get. Malta is an island-sized metaphor.",
   steps:[
@@ -592,7 +592,7 @@ const COUNTRIES = [
       "Most founders give up and use a foreign fintech. Some government payments still want a real Maltese account. Would you like a coffee? You will want a subscription." ],
       wait:40, san:18, doc:'Bank Account (eventually)' } ] },
 
-{ id:'nl', name:'Netherlands', flag:'🇳🇱', entity:'BV', estDays:14, roof:2, office:'Kamer van Koophandel (KVK), Utrecht', bs:'brick', wc:'#8a4a34', rc:['#3a3a40','#2a2a30'],
+{ id:'nl', name:'Netherlands', flag:'🇳🇱', entity:'BV', estDays:14, roof:2, office:'Kamer van Koophandel (KVK), Utrecht', bs:'brick', wc:'#8a4a34', rc:['#3a3a40','#2a2a30'], src:[["KVK registration fee (82.25 euro)", "https://www.kvk.nl/inschrijven/inschrijfvergoeding/"], ["DGA customary-salary rule", "https://www.belastingdienst.nl"]],
   tag:"Minimum capital: one cent. Certifying it requires a mandatory notary at €1,500. The UBO register is mandatory to fill in and, since 2022, forbidden to read. KVK fee: €82.25.",
   steps:[
     { who:'Notaris de Vries', lines:[
@@ -611,7 +611,7 @@ const COUNTRIES = [
       {t:"O ja: als directeur-grootaandeelhouder moet u zichzelf een 'gebruikelijk loon' betalen. Minimaal €56.000 per jaar. Ook zonder omzet. Veel succes ermee.", s:"Oh yes: as founder-director you must pay yourself a 'customary salary'. Minimum €56,000 a year. Even with zero revenue. Best of luck with that."} ],
       wait:2, san:6, doc:'UBO-registratie' } ] },
 
-{ id:'pl', name:'Poland', flag:'🇵🇱', entity:'Sp. z o.o.', estDays:12, roof:3, office:'Krajowy Rejestr Sądowy (KRS), Warszawa', bs:'plaster', wc:'#e8dcc8', rc:['#8a5a48','#6e4638'],
+{ id:'pl', name:'Poland', flag:'🇵🇱', entity:'Sp. z o.o.', estDays:12, roof:3, office:'Krajowy Rejestr Sądowy (KRS), Warszawa', bs:'plaster', wc:'#e8dcc8', rc:['#8a5a48','#6e4638'], src:[["S24 / biznes.gov.pl", "https://www.biznes.gov.pl"], ["CRBR (UBO register, PLN 1M fine)", "https://www.gov.pl/web/finanse/crbr"]],
   tag:"The 24-hour online portal is exclusively in Polish, and its free signing path needs a PESEL — the 'fully remote' route begins with living in Poland. Then a 23-złoty tax nobody tells you about.",
   steps:[
     { who:'Profil Zaufany', lines:[
@@ -630,7 +630,7 @@ const COUNTRIES = [
       {t:"Niezapłacenie 23 złotych to wykroczenie skarbowe. A beneficjentów zgłasza się do CRBR w 14 dni — kara sięga MILIONA złotych. Miłego dnia.", s:"Failing to pay the 23 złoty is a fiscal offence. And beneficial owners go into the CRBR within 14 days — the fine reaches a MILLION złoty. Have a nice day."} ],
       cost:6, wait:2, san:6, doc:'PCC-3 + CRBR' } ] },
 
-{ id:'pt', name:'Portugal', flag:'🇵🇹', entity:'Lda.', estDays:2, roof:4, office:'Empresa na Hora — Registo Comercial, Lisboa', bs:'azulejo', wc:'#f2efe6', rc:['#c0563a','#96422c'],
+{ id:'pt', name:'Portugal', flag:'🇵🇹', entity:'Lda.', estDays:2, roof:4, office:'Empresa na Hora — Registo Comercial, Lisboa', bs:'azulejo', wc:'#f2efe6', rc:['#c0563a','#96422c'], src:[["Empresa na Hora - official", "https://justica.gov.pt/Servicos/Empresa-na-Hora"], ["Name certificate (IRN)", "https://irn.justica.gov.pt"]],
   tag:"'Empresa na Hora' — a company in one hour, genuinely. You just pick the name from a government list of pre-generated fantasy words. Your own name: €75 and ten days. Also: an accountant, monthly, for life.",
   outro:"Under one hour at the counter — the fastest thing Portuguese bureaucracy has ever done. The price: your company answers to a name drawn from a government word-lottery, and a certified accountant bills you monthly until the heat death of the universe. Portugal contains multitudes.",
   steps:[
@@ -656,7 +656,7 @@ const COUNTRIES = [
       {t:"A declaração de início de atividade só é aceite se for assinada por um Contabilista Certificado. A sua empresa de €1 precisa de um contabilista pago. Todos os meses. Para toda a vida.", s:"The start-of-activity declaration is only accepted if signed by a Certified Accountant. Your €1 company needs a paid accountant. Every month. For life."} ],
       cost:150, wait:1, san:5, doc:'Início de atividade' } ] },
 
-{ id:'ro', name:'Romania', flag:'🇷🇴', entity:'SRL', estDays:10, roof:5, office:'Oficiul Național al Registrului Comerțului (ONRC), București', bs:'plaster', wc:'#cfe0d8', rc:['#8a5a48','#6e4638'],
+{ id:'ro', name:'Romania', flag:'🇷🇴', entity:'SRL', estDays:10, roof:5, office:'Oficiul Național al Registrului Comerțului (ONRC), București', bs:'plaster', wc:'#cfe0d8', rc:['#8a5a48','#6e4638'], src:[["ONRC", "https://www.onrc.ro"], ["Law 239/2025 - capital minimum returns", "https://lexter.ro/blog/srl-share-capital-2026-law-239-onrc"]],
   tag:"Registration is 100% free by law — so everyone pays a consultant, because the free procedure runs on Romanian-only templates and a qualified e-signature. The registered office where 'no activity takes place' is.",
   steps:[
     { who:'ONRC — ghișeul de nume', lines:[
@@ -676,7 +676,7 @@ const COUNTRIES = [
       {t:"O factură trimisă pe orice altă cale, fiscal vorbind, nu există. Bine ați venit în România digitală!", s:"An invoice sent any other way, fiscally speaking, does not exist. Welcome to digital Romania!"} ],
       wait:3, doc:'Cont SPV + e-Factura' } ] },
 
-{ id:'sk', name:'Slovakia', flag:'🇸🇰', entity:'s.r.o.', estDays:14, roof:6, office:'Obchodný register SR, Bratislava', bs:'plaster', wc:'#dfe8c8', rc:['#8a5a48','#6e4638'],
+{ id:'sk', name:'Slovakia', flag:'🇸🇰', entity:'s.r.o.', estDays:14, roof:6, office:'Obchodný register SR, Bratislava', bs:'plaster', wc:'#dfe8c8', rc:['#8a5a48','#6e4638'], src:[["Court fee 220 euro since 4/2024", "https://www.podnikajte.sk/obchodne-pravo/zvysenie-sudnych-a-spravnych-poplatkov-od-1-4-2024"], ["slovensko.sk e-filing", "https://www.slovensko.sk"]],
   tag:"A foreigner must submit a notarized declaration about a Slovak tax file that doesn't exist. The €5,000 capital is 'deposited' into the company cash box — a drawer — proven by a note you write yourself.",
   steps:[
     { who:'Daňový úrad', lines:[
@@ -694,7 +694,7 @@ const COUNTRIES = [
       {t:"Súdny poplatok medzitým potichu stúpol zo €150 na €220. Nikto si nevšimol. Vitajte na Slovensku — skúste halušky.", s:"The court fee, meanwhile, quietly rose from €150 to €220. Nobody noticed. Welcome to Slovakia — try the halušky."} ],
       cost:204, wait:4, doc:'Výpis z obchodného registra' } ] },
 
-{ id:'si', name:'Slovenia', flag:'🇸🇮', entity:'d.o.o.', estDays:14, roof:7, office:'AJPES — Poslovni register Slovenije, Ljubljana', bs:'alpine', wc:'#f2ede2', rc:['#7a6a58','#5e5044'],
+{ id:'si', name:'Slovenia', flag:'🇸🇮', entity:'d.o.o.', estDays:14, roof:7, office:'AJPES — Poslovni register Slovenije, Ljubljana', bs:'alpine', wc:'#f2ede2', rc:['#7a6a58','#5e5044'], src:[["SPOT - free d.o.o. registration", "https://spot.gov.si/en/info/company-registration/limited-liability-company-d-o-o"], ["Director minimum contributions", "https://mladipodjetnik.si"]],
   tag:"Registration: genuinely free. The ticket to the 'fully online' system: a paper form, an in-person certificate, €7,500 frozen in advance — and €858/month in contributions before you earn a euro.",
   steps:[
     { who:'FURS', lines:[
@@ -716,7 +716,7 @@ const COUNTRIES = [
       {t:"Preden zaslužite prvi evro. Dobrodošli v Sloveniji!", s:"Before you earn your first euro. Welcome to Slovenia!"} ],
       cost:858, wait:2, san:10, doc:'Vpis AJPES' } ] },
 
-{ id:'es', name:'Spain', flag:'🇪🇸', entity:'S.L.', estDays:40, roof:0, office:'Registro Mercantil de Madrid', bs:'medit', wc:'#eabf8e', rc:['#c0563a','#96422c'],
+{ id:'es', name:'Spain', flag:'🇪🇸', entity:'S.L.', estDays:40, roof:0, office:'Registro Mercantil de Madrid', bs:'medit', wc:'#eabf8e', rc:['#c0563a','#96422c'], src:[["Registradores de Espana", "https://www.registradores.org"], ["RETA for administrators", "https://www.infoautonomos.com/seguridad-social/cuota-autonomos-societarios/"]],
   tag:"NIE appointments are scalped by bots at midnight; the physical queue starts at 6 AM. You'll file a mandatory tax return for €0, and the late registrar's penalty is a discount on his own fee. RETA: ~€315/month, even unpaid.",
   steps:[
     { who:'Extranjería', queue:'VENTANILLA ÚNICA', lines:[
@@ -745,7 +745,7 @@ const COUNTRIES = [
       {t:"Inscrita. Y ahora, el RETA: unos €315 al mes de autónomos por administrar su empresa. Aunque no cobre nada. ¡Enhorabuena! Échese una siesta. La ha ganado.", s:"Registered. And now, RETA: about €315 a month in self-employed contributions for managing your company. Even if you pay yourself nothing. Congratulations! Take a nap. You've earned it."} ],
       cost:565, wait:8, san:6, doc:'Inscripción registral' } ] },
 
-{ id:'se', name:'Sweden', flag:'🇸🇪', entity:'AB', estDays:20, roof:1, office:'Bolagsverket, Sundsvall', bs:'nordic', wc:'#9e3f2f', rc:['#3a3a40','#2a2a30'],
+{ id:'se', name:'Sweden', flag:'🇸🇪', entity:'AB', estDays:20, roof:1, office:'Bolagsverket, Sundsvall', bs:'nordic', wc:'#9e3f2f', rc:['#3a3a40','#2a2a30'], src:[["Bolagsverket - avgifter", "https://www.bolagsverket.se/sjalvservice/avgifter"], ["Bolagsverket", "https://www.bolagsverket.se"]],
   tag:"A bank certificate for a company that doesn't exist, issued only to existing BankID customers, which requires a personnummer. Applications processed strictly in order — NO priority for anyone. This is Sweden.",
   steps:[
     { who:'BankID-disken', lines:[
@@ -1042,6 +1042,7 @@ function offerCountry(ci){
     {speaker:c.flag+' '+c.name, text:countryInfoText(c) + (prog? '  ·  progress: step '+(prog+1)+'/'+c.steps.length : '')},
     {speaker:'', text:'Incorporate '+G.coName+' here?', options:[
       {label: prog? 'Go back in (step '+(prog+1)+'/'+c.steps.length+')' : 'Enter — let\'s do this', fn:()=>{ enterOffice(ci); }},
+      {label:'\ud83d\udccb Field notes \u2014 the real rules & sources', fn:()=>{ G.notesFor=c; }},
       {label:'Not yet. Keep window-shopping jurisdictions.'},
     ]},
   ];
@@ -1141,6 +1142,7 @@ function talkTo(n){
       {speaker:'The Consultant', text:"Welcome to Incorporation Plaza. 28 doors, one goal: make your startup legally exist."},
       {speaker:'The Consultant', text:"Every country will happily incorporate you. The question is what it costs — in days, euros, and sanity. Read the signs by the doors before committing."},
       {speaker:'The Consultant', text:"Your wallet auto-converts currencies. Magic. Don't ask, focus on the paperwork. Coffee ☕ on the street restores sanity. You'll need it."},
+      {speaker:'The Consultant', text:"And know this: nothing in here is invented. Every fee, wait and law the clerks quote is real \u2014 pick 'Field notes' at any door for the sources."},
       {speaker:'The Consultant', text:"The scaffolding south-west of the plaza, next to the American building? The EU — one company form for all 27 countries. Opening 2028. The crane hasn't moved since I started working here."},
 
     ]);
@@ -1240,6 +1242,12 @@ window.addEventListener('keydown',e=>{
   if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(k)) e.preventDefault();
   KEY[k.toLowerCase()]=true;
   if(!G) return;
+  if(G.notesFor && G.scene!=='win'){
+    if(k.toLowerCase()==='o' && G.notesFor.src){ try{ window.open(G.notesFor.src[0][1],'_blank'); }catch(e){} return; }
+    if(k.toLowerCase()==='n'||k==='Escape'||k==='e'||k==='E'||k===' '||k==='Enter'){ G.notesFor=null; }
+    return;
+  }
+  if(G.scene==='win' && G.notesFor && k.toLowerCase()==='o' && G.notesFor.src){ try{ window.open(G.notesFor.src[0][1],'_blank'); }catch(e){} return; }
   if(G.scene==='over'){
     if(k.toLowerCase()==='r'||k==='Enter'||k===' ') resetToTitle();
     return;
@@ -1247,7 +1255,7 @@ window.addEventListener('keydown',e=>{
   if(G.scene==='win'){
     if(k==='ArrowUp'||k==='ArrowDown'||k.toLowerCase()==='w'||k.toLowerCase()==='s'){ G.winSel=1-G.winSel; sfx.step(); return; }
     if(k.toLowerCase()==='r'){ resetToTitle(); return; }
-    if(k.toLowerCase()==='n'){ G.notesOpen=!G.notesOpen; return; }
+    if(k.toLowerCase()==='n'){ G.notesFor=G.notesFor?null:G.done; return; }
     if(k.toLowerCase()==='c'){
       const [g]=grade(G.days);
       const txt='I incorporated "'+G.coName+'" in '+G.done.flag+' '+G.done.name+' in '+G.days+' days — '+
@@ -2078,7 +2086,6 @@ function drawWin(){
     X.fillStyle='#5a617a'; X.font='11px ui-monospace,Menlo,monospace';
     X.fillText('C — copy · N — field notes', W-110, 20);
   }
-  if(G.notesOpen) drawNotes(c);
   X.fillStyle='#f2e8cf'; X.font='bold 13px ui-monospace,Menlo,monospace';
   X.fillText('Play again? ('+Object.keys(DONE).length+'/28 conquered — your bests go into the table)', W/2, H-52);
   const wopts=['Yes — start over, day 0','No — keep going, incorporate in MORE countries'];
@@ -2115,9 +2122,22 @@ function drawNotes(c){
   });
   ny+=8;
   X.fillStyle='#5a617a'; X.font='italic 11px ui-monospace,Menlo,monospace';
-  X.fillText('Rules, fees and timelines as of 2025/26 — sources: the official registries and fee schedules of each country.', 70, ny);
+  if(c.src){
+    ny+=10;
+    X.fillStyle='#f2e8cf'; X.font='bold 12px ui-monospace,Menlo,monospace';
+    X.fillText('Sources — the actual rules:', 70, ny); ny+=17;
+    X.font='11px ui-monospace,Menlo,monospace';
+    for(const sc of c.src){
+      X.fillStyle='#8fd4ff'; X.fillText('• '+sc[0], 70, ny);
+      X.fillStyle='#5a617a'; X.fillText(sc[1].replace(/^https?:\/\/(www\.)?/,''), 96, ny+13);
+      ny+=30;
+    }
+  }
+  ny+=6;
+  X.fillStyle='#5a617a'; X.font='italic 11px ui-monospace,Menlo,monospace';
+  X.fillText('Rules, fees and timelines as of 2025/26. None of this is invented.', 70, ny);
   X.textAlign='center'; X.fillStyle='#f0c040'; X.font='bold 11px ui-monospace,Menlo,monospace';
-  X.fillText('N — close', W/2, H-42);
+  X.fillText('N — close'+(c.src? '  ·  O — open first source':''), W/2, H-42);
   X.textAlign='left';
 }
 function drawOver(){
@@ -2213,10 +2233,11 @@ function frame(now){
   if(G){
     update(dt);
     if(G.scene==='title') drawTitle();
-    else if(G.scene==='win'){ G.t+=dt; if(G.winLock>0) G.winLock-=dt; drawWin(); }
+    else if(G.scene==='win'){ G.t+=dt; if(G.winLock>0) G.winLock-=dt; drawWin(); if(G.notesFor) drawNotes(G.notesFor); }
     else if(G.scene==='over') drawOver();
     else {
       drawWorld(); drawHUD(); drawWaiting(); drawDialog();
+      if(G.notesFor) drawNotes(G.notesFor);
       if(G.fade){ X.fillStyle='rgba(11,13,18,'+clamp(G.fade.a,0,1)+')'; X.fillRect(0,0,W,H); }
     }
   }
