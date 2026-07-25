@@ -462,6 +462,7 @@ function drawDialog(){
     }
     if(p.options){
       ty+=10;
+      d._optY=p.options.map((_,i)=>ty+i*24);
       p.options.forEach((o,i)=>{
         X.fillStyle = i===d.sel? '#f0c040':'#8a90a4';
         X.font = i===d.sel? 'bold 14px ui-monospace,Menlo,monospace':'14px ui-monospace,Menlo,monospace';
