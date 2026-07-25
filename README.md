@@ -3,6 +3,8 @@
 A bird's-eye, SNES-style adventure through the real company-formation
 bureaucracies of the United States and all 27 EU countries.
 
+![Incorporation Plaza — the USA embassy next to the EU construction site](og.png)
+
 You are a founder with an idea and €30,000. To exist, you must incorporate —
 somewhere. 28 doors ring Incorporation Plaza: Delaware takes a day and ~$400
 online; Germany takes a quarter of a year, a notary who reads the deed aloud
@@ -23,6 +25,8 @@ Or play the hosted version at [incorporationgame.eu](https://incorporationgame.e
 - **Sound** — M
 - Dialogue is in each country's language with English subtitles — English
   only where the official channels genuinely offer it.
+
+![Inside the German office — Amtsgericht Charlottenburg, eight desks, no map](screenshot-office.png)
 
 ## What's inside
 
