@@ -1,8 +1,15 @@
 html,body{margin:0;padding:0;background:#0b0d12;min-height:100vh;overscroll-behavior:none;touch-action:manipulation;}
   #wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;gap:10px;padding:12px;box-sizing:border-box;}
-  #rotateHint{display:none;position:fixed;inset:0;background:#0b0d12;z-index:9;color:#f0c040;
-    font:bold 18px ui-monospace,Menlo,monospace;align-items:center;justify-content:center;text-align:center;padding:30px;}
-  @media (orientation:portrait) and (max-width:700px){ #rotateHint{display:flex;} }
+  /* portrait: handheld layout — game on top, controller deck underneath */
+  @media (orientation:portrait) and (max-width:700px){
+    html.touch #wrap{justify-content:flex-start;padding-top:calc(env(safe-area-inset-top, 0px) + 6px);}
+    html.touch #cv{width:100%;max-height:none;}
+    html.touch #foot{order:3;}
+    html.touch #dpad{left:7vw;bottom:10vh;gap:6px;
+      grid-template-columns:58px 58px 58px;grid-template-rows:58px 58px 58px;}
+    html.touch #dpad .tb{font-size:22px;}
+    html.touch #abtn{right:9vw;bottom:13vh;width:88px;height:88px;font-size:32px;}
+  }
   #cv{touch-action:none;image-rendering:pixelated;max-width:100%;max-height:88vh;max-height:88dvh;border:3px solid #2a2f42;border-radius:4px;box-shadow:0 0 60px rgba(240,192,64,.07), 0 20px 60px rgba(0,0,0,.6);background:#0b0d12;}
   #foot{color:#5a617a;font:12px ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;}
   #titleUI{position:absolute;display:flex;flex-direction:column;align-items:center;gap:14px;}

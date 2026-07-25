@@ -361,7 +361,14 @@ if(('ontouchstart' in window) || navigator.maxTouchPoints>0 || /debug=touch/.tes
   const tui=document.getElementById('touchUI');
   tui.style.display='block';
   document.documentElement.classList.add('touch');
-  ZOOM=1.7; UIS=1.45;
+  const fitMobile=()=>{
+    const portrait=matchMedia('(orientation:portrait)').matches;
+    ZOOM = portrait? 2.2 : 1.7;
+    UIS  = portrait? 1.9 : 1.45;
+  };
+  fitMobile();
+  window.addEventListener('resize', fitMobile);
+  window.addEventListener('orientationchange', fitMobile);
   // iOS: kill double-tap zoom but keep rapid taps working (re-dispatch as click)
   let lastTouchEnd=0;
   document.addEventListener('touchend',e=>{
