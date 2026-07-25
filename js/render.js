@@ -290,6 +290,13 @@ function drawWorld(){
     X.fillStyle='#f2e8cf'; X.fillText(lb.text,px,py);
   }
 
+  // tap destination marker
+  if(G.tapMark){
+    const mk=G.tapMark, k=1-mk.t/0.45;
+    X.strokeStyle = mk.hit? 'rgba(240,192,64,'+(k*0.9)+')' : 'rgba(242,232,207,'+(k*0.7)+')';
+    X.lineWidth=2;
+    X.beginPath(); X.arc(mk.x-cx, mk.y-cy, 4+14*(1-k), 0, 7); X.stroke();
+  }
   // floaters
   X.font='bold 13px ui-monospace,Menlo,monospace';
   for(const f of G.floaters){

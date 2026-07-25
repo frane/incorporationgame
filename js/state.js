@@ -398,8 +398,25 @@ function winConfirm(){
 }
 function canvasPoint(e){
   const r=CV.getBoundingClientRect();
-  return {x:(e.clientX-r.left)*(W/r.width), y:(e.clientY-r.top)*(H/r.height)};
+  return {x:(e.clientX-r.left-CV.clientLeft)*(W/CV.clientWidth),
+          y:(e.clientY-r.top-CV.clientTop)*(H/CV.clientHeight)};
 }
+function worldHit(wx,wy){
+  for(const n of G.map.npcs){
+    const dx=n.x-wx, dy=(n.y-16)-wy;
+    if(dx*dx+dy*dy<34*34) return {t:'npc', n, x:n.x, y:n.y};
+  }
+  const meta=G.map.meta.get(mkey(Math.floor(wx/T), Math.floor(wy/T)));
+  if(meta) return {t:'meta', meta, x:Math.floor(wx/T)*T+16, y:Math.floor(wy/T)*T+16};
+  return null;
+}
+CV.addEventListener('mousemove',e=>{
+  if(!G || G.scene!=='play' || G.dlg || G.waiting || G.notesFor){ CV.style.cursor='default'; return; }
+  const pt=canvasPoint(e);
+  if(pt.y<48){ CV.style.cursor='default'; return; }
+  const cam=camera();
+  CV.style.cursor = worldHit(pt.x+cam.cx, pt.y+cam.cy) ? 'pointer' : 'crosshair';
+});
 CV.addEventListener('click',e=>{
   CV.focus(); if(!G) return;
   if(G.scene==='over'){ resetToTitle(); return; }
@@ -425,18 +442,15 @@ CV.addEventListener('click',e=>{
   if(G.waiting||G.fade||G.scene!=='play') return;
   // tap-to-move: walk to the point; if it's someone/something, talk on arrival
   const pt=canvasPoint(e);
+  if(pt.y<48) return;
   const cam=camera();
   const wx=pt.x+cam.cx, wy=pt.y+cam.cy;
-  let cand=null;
-  for(const n of G.map.npcs){
-    const dx=n.x-wx, dy=(n.y-16)-wy;
-    if(dx*dx+dy*dy<32*32) cand={t:'npc', n, x:n.x, y:n.y};
-  }
-  if(!cand){
-    const meta=G.map.meta.get(mkey(Math.floor(wx/T), Math.floor(wy/T)));
-    if(meta) cand={t:'meta', meta, x:(Math.floor(wx/T))*T+16, y:(Math.floor(wy/T))*T+16};
-  }
-  G.tapTarget={x:wx, y:wy, cand, stuck:0, lx:G.px, ly:G.py};
+  const cand=worldHit(wx,wy);
+  // aim for a standing spot in front of the target, not the target itself
+  const tx = cand? cand.x : wx;
+  const ty = cand? cand.y+30 : wy;
+  G.tapTarget={x:tx, y:ty, cand, stuck:0, lx:G.px, ly:G.py};
+  G.tapMark={x:wx, y:wy, t:0, hit:!!cand};
 });
 
 /* ---------------- update ---------------- */
@@ -480,22 +494,22 @@ function update(dt){
   if(vx||vy) G.tapTarget=null;
   else if(G.tapTarget){
     const tt=G.tapTarget;
-    const tdx=tt.x-G.px, tdy=tt.y-G.py, dist=Math.hypot(tdx,tdy);
-    const arrive=()=>{
+    if(tt.cand && Math.hypot(tt.cand.x-G.px,(tt.cand.y-8)-G.py)<48){
       const c=tt.cand; G.tapTarget=null;
-      if(c && Math.hypot(c.x-G.px,c.y-G.py)<56){
-        G.dir = Math.abs(c.x-G.px)>Math.abs(c.y-G.py) ? (c.x<G.px?2:3) : (c.y<G.py?1:0);
-        if(c.t==='npc') talkTo(c.n); else useMeta(c.meta);
+      G.dir = Math.abs(c.x-G.px)>Math.abs(c.y-G.py) ? (c.x<G.px?2:3) : (c.y<G.py?1:0);
+      if(c.t==='npc') talkTo(c.n); else useMeta(c.meta);
+    } else {
+      const tdx=tt.x-G.px, tdy=tt.y-G.py, dist=Math.hypot(tdx,tdy);
+      if(dist<6) G.tapTarget=null;
+      else {
+        vx=tdx/dist; vy=tdy/dist;
+        if(Math.hypot(G.px-tt.lx,G.py-tt.ly)<0.5) tt.stuck+=dt; else tt.stuck=0;
+        tt.lx=G.px; tt.ly=G.py;
+        if(tt.stuck>0.4) G.tapTarget=null;
       }
-    };
-    if(dist<10) arrive();
-    else {
-      vx=tdx/dist; vy=tdy/dist;
-      if(Math.hypot(G.px-tt.lx,G.py-tt.ly)<0.5) tt.stuck+=dt; else tt.stuck=0;
-      tt.lx=G.px; tt.ly=G.py;
-      if(tt.stuck>0.45) arrive();
     }
   }
+  if(G.tapMark){ G.tapMark.t+=dt; if(G.tapMark.t>0.45) G.tapMark=null; }
   G.moving = !!(vx||vy);
   if(G.moving){
     if(Math.abs(vx)>Math.abs(vy)) G.dir = vx<0?2:3;
