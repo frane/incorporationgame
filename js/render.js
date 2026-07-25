@@ -3,10 +3,11 @@
    ================================================================ */
 function camera(){
   const m=G.map, mw=m.w*T, mh=m.h*T;
-  let cx=clamp(G.px-W/2, 0, Math.max(0,mw-W));
-  let cy=clamp(G.py-H/2, 0, Math.max(0,mh-H));
-  const ox=mw<W? (W-mw)/2 : 0;
-  const oy=mh<H? (H-mh)/2 : 0;
+  const vw=W/ZOOM, vh=H/ZOOM;
+  let cx=clamp(G.px-vw/2, 0, Math.max(0,mw-vw));
+  let cy=clamp(G.py-vh/2, 0, Math.max(0,mh-vh));
+  const ox=mw<vw? (vw-mw)/2 : 0;
+  const oy=mh<vh? (vh-mh)/2 : 0;
   return {cx:Math.round(cx-ox), cy:Math.round(cy-oy)};
 }
 
@@ -204,8 +205,10 @@ function drawWorld(){
   SEAS=Math.floor((((G&&G.days)||0)%84)/21);
   const {cx,cy}=camera(), m=G.map;
   X.fillStyle='#0b0d12'; X.fillRect(0,0,W,H);
+  X.save(); X.scale(ZOOM,ZOOM);
+  const VW=W/ZOOM, VH=H/ZOOM;
   const x0=Math.max(0,Math.floor(cx/T)), y0=Math.max(0,Math.floor(cy/T));
-  const x1=Math.min(m.w-1,Math.ceil((cx+W)/T)), y1=Math.min(m.h-1,Math.ceil((cy+H)/T));
+  const x1=Math.min(m.w-1,Math.ceil((cx+VW)/T)), y1=Math.min(m.h-1,Math.ceil((cy+VH)/T));
   for(let ty=y0;ty<=y1;ty++) for(let tx=x0;tx<=x1;tx++)
     drawTile(m,tx,ty, tx*T-cx, ty*T-cy);
 
@@ -215,7 +218,7 @@ function drawWorld(){
     if(meta.t!=='sign'&&meta.t!=='welcome'&&meta.t!=='eusign') continue;
     const [tx,ty]=k.split(',').map(Number);
     const px=tx*T-cx, py=ty*T-cy;
-    if(px<-T||py<-T||px>W||py>H) continue;
+    if(px<-T||py<-T||px>VW||py>VH) continue;
     X.font='11px ui-monospace,Menlo,monospace';
     X.fillText(meta.t==='welcome'?'ℹ️':meta.t==='eusign'?'🚧':COUNTRIES[meta.c].flag, px+16, py+9);
   }
@@ -225,7 +228,7 @@ function drawWorld(){
       if(meta.t!=='door'&&meta.t!=='eu') continue;
       const [tx,ty]=k.split(',').map(Number);
       const px=tx*T-cx, py=ty*T-cy;
-      if(px<-T*2||py<-T*2||px>W+T||py>H+T) continue;
+      if(px<-T*2||py<-T*2||px>VW+T||py>VH+T) continue;
       X.font='14px ui-monospace,Menlo,monospace';
       X.fillText(meta.t==='eu'?'🇪🇺':COUNTRIES[meta.c].flag, px+16, py-8);
     }
@@ -284,7 +287,7 @@ function drawWorld(){
   X.font='bold 11px ui-monospace,Menlo,monospace';
   for(const lb of m.labels){
     const px=lb.x-cx, py=lb.y-cy;
-    if(px<-160||py<-20||px>W+160||py>H+20) continue;
+    if(px<-160||py<-20||px>VW+160||py>VH+20) continue;
     X.lineWidth=3; X.strokeStyle='rgba(11,13,18,0.75)';
     X.strokeText(lb.text,px,py);
     X.fillStyle='#f2e8cf'; X.fillText(lb.text,px,py);
@@ -306,6 +309,7 @@ function drawWorld(){
     X.fillStyle=f.color; X.fillText(f.txt, f.x-cx, f.y-cy);
   }
   X.globalAlpha=1;
+  X.restore();
 }
 
 function drawEUSite(cx,cy){
@@ -427,8 +431,8 @@ function drawHUD(){
     }
     if(hint){
       const {cx,cy}=camera();
-      X.fillStyle='#f0c040'; X.font='bold 12px ui-monospace,Menlo,monospace'; X.textAlign='center';
-      X.fillText('[E]', hint.x-cx, hint.y-cy+Math.sin(G.t*6)*2);
+      X.fillStyle='#f0c040'; X.font='bold '+Math.round(12*ZOOM)+'px ui-monospace,Menlo,monospace'; X.textAlign='center';
+      X.fillText('[E]', (hint.x-cx)*ZOOM, (hint.y-cy+Math.sin(G.t*6)*2)*ZOOM);
       X.textAlign='left';
     }
   }
@@ -438,50 +442,52 @@ function drawDialog(){
   const d=G.dlg; if(!d) return;
   const p=d.pages[d.i];
   d.chars=Math.min(p.text.length, d.chars + 1.7);
+  const fM=Math.round(15*UIS), fS=Math.round(12*UIS), fH=Math.round(14*UIS);
+  const lhM=Math.round(22*UIS), lhS=Math.round(17*UIS), lhO=Math.round(24*UIS);
+  const fontM=fM+'px ui-monospace,Menlo,monospace';
+  const fontS='italic '+fS+'px ui-monospace,Menlo,monospace';
   const bx=20, bw=W-40;
-  // measure box height from full content
-  const mainLines=wrapText(p.text, bw-60, '15px ui-monospace,Menlo,monospace');
-  const subLines = p.sub? wrapText(p.sub, bw-80, 'italic 12px ui-monospace,Menlo,monospace') : [];
-  let bh = 30 + (p.speaker?24:0) + mainLines.length*22 + (subLines.length? subLines.length*17+12:0) + 22;
-  if(p.options) bh += p.options.length*24 + 8;
+  const mainLines=wrapText(p.text, bw-60, fontM);
+  const subLines = p.sub? wrapText(p.sub, bw-80, fontS) : [];
+  let bh = 30 + (p.speaker?lhO:0) + mainLines.length*lhM + (subLines.length? subLines.length*lhS+12:0) + lhM;
+  if(p.options) bh += p.options.length*lhO + 8;
   const by=H-bh-16;
   X.fillStyle='rgba(20,23,34,0.96)'; X.fillRect(bx,by,bw,bh);
   X.strokeStyle='#e8dcc8'; X.lineWidth=3; X.strokeRect(bx+1.5,by+1.5,bw-3,bh-3);
   X.strokeStyle='#4a4f62'; X.lineWidth=1; X.strokeRect(bx+6.5,by+6.5,bw-13,bh-13);
   X.textAlign='left'; X.textBaseline='alphabetic';
-  let ty=by+34;
+  let ty=by+14+lhM*0.8;
   if(p.speaker){
-    X.fillStyle='#f0c040'; X.font='bold 14px ui-monospace,Menlo,monospace';
-    X.fillText(p.speaker.toUpperCase(), bx+24, ty); ty+=24;
+    X.fillStyle='#f0c040'; X.font='bold '+fH+'px ui-monospace,Menlo,monospace';
+    X.fillText(p.speaker.toUpperCase(), bx+24, ty); ty+=lhO;
   }
-  X.fillStyle='#f2e8cf'; X.font='15px ui-monospace,Menlo,monospace';
+  X.fillStyle='#f2e8cf'; X.font=fontM;
   const shown=String(p.text).slice(0, d.chars|0);
-  for(const line of wrapText(shown, bw-60, '15px ui-monospace,Menlo,monospace')){
-    X.fillText(line, bx+24, ty); ty+=22;
+  for(const line of wrapText(shown, bw-60, fontM)){
+    X.fillText(line, bx+24, ty); ty+=lhM;
   }
   if(d.chars>=p.text.length){
-    ty=by+34+(p.speaker?24:0)+mainLines.length*22;
+    ty=by+14+lhM*0.8+(p.speaker?lhO:0)+mainLines.length*lhM;
     if(subLines.length){
       ty+=6;
-      X.fillStyle='#8a90a4'; X.font='italic 12px ui-monospace,Menlo,monospace';
-      for(const line of subLines){ X.fillText(line, bx+34, ty); ty+=17; }
+      X.fillStyle='#8a90a4'; X.font=fontS;
+      for(const line of subLines){ X.fillText(line, bx+34, ty); ty+=lhS; }
       ty+=6;
     }
     if(p.options){
       ty+=10;
-      d._optY=p.options.map((_,i)=>ty+i*24);
+      d._optY=p.options.map((_,i)=>ty+i*lhO);
       p.options.forEach((o,i)=>{
         X.fillStyle = i===d.sel? '#f0c040':'#8a90a4';
-        X.font = i===d.sel? 'bold 14px ui-monospace,Menlo,monospace':'14px ui-monospace,Menlo,monospace';
-        X.fillText((i===d.sel?'▸ ':'  ')+o.label, bx+44, ty+i*24);
+        X.font = (i===d.sel?'bold ':'')+fH+'px ui-monospace,Menlo,monospace';
+        X.fillText((i===d.sel?'▸ ':'  ')+o.label, bx+44, ty+i*lhO);
       });
     } else {
-      X.fillStyle='#f0c040'; X.font='bold 14px ui-monospace,Menlo,monospace';
+      X.fillStyle='#f0c040'; X.font='bold '+fH+'px ui-monospace,Menlo,monospace';
       X.fillText('▼', bx+bw-30, by+bh-16+Math.sin(G.t*6)*2);
     }
   }
 }
-
 function drawWaiting(){
   const wt=G.waiting; if(!wt) return;
   const frac=clamp(wt.t/wt.dur,0,1);

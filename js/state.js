@@ -361,6 +361,7 @@ if(('ontouchstart' in window) || navigator.maxTouchPoints>0 || /debug=touch/.tes
   const tui=document.getElementById('touchUI');
   tui.style.display='block';
   document.documentElement.classList.add('touch');
+  ZOOM=1.7; UIS=1.45;
   // iOS: kill double-tap zoom but keep rapid taps working (re-dispatch as click)
   let lastTouchEnd=0;
   document.addEventListener('touchend',e=>{
@@ -430,7 +431,7 @@ CV.addEventListener('mousemove',e=>{
   const pt=canvasPoint(e);
   if(pt.y<48){ CV.style.cursor='default'; return; }
   const cam=camera();
-  CV.style.cursor = worldHit(pt.x+cam.cx, pt.y+cam.cy) ? 'pointer' : 'crosshair';
+  CV.style.cursor = worldHit(pt.x/ZOOM+cam.cx, pt.y/ZOOM+cam.cy) ? 'pointer' : 'crosshair';
 });
 CV.addEventListener('click',e=>{
   CV.focus(); if(!G) return;
@@ -449,7 +450,7 @@ CV.addEventListener('click',e=>{
     const d=G.dlg, p=d.pages[d.i];
     if(p.options && d.chars>=p.text.length && d._optY){
       const pt=canvasPoint(e);
-      const idx=d._optY.findIndex(oy=>Math.abs(pt.y-oy)<12);
+      const idx=d._optY.findIndex(oy=>Math.abs(pt.y-oy)<12*UIS);
       if(idx>=0){ if(d.sel===idx) advanceDialog(); else { d.sel=idx; sfx.step(); } return; }
     }
     advanceDialog(); return;
@@ -459,7 +460,7 @@ CV.addEventListener('click',e=>{
   const pt=canvasPoint(e);
   if(pt.y<48) return;
   const cam=camera();
-  const wx=pt.x+cam.cx, wy=pt.y+cam.cy;
+  const wx=pt.x/ZOOM+cam.cx, wy=pt.y/ZOOM+cam.cy;
   const cand=worldHit(wx,wy);
   // aim for a standing spot in front of the target, not the target itself
   const tx = cand? cand.x : wx;

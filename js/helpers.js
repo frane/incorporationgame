@@ -4,6 +4,7 @@
    ================================================================ */
 const CV = document.getElementById('cv'), X = CV.getContext('2d');
 const W = 960, H = 600, T = 32;
+let ZOOM = 1, UIS = 1; // world zoom & UI text scale (raised on touch devices)
 X.imageSmoothingEnabled = false;
 
 /* ---------------- audio ---------------- */
