@@ -302,6 +302,7 @@ function useMeta(meta){
       {speaker:'⛲ Plaza Sign', text:"INCORPORATION PLAZA — 'Where dreams become filing numbers.' Signs by each door list the damage. Choose a door. Choose wisely."},
     ]);
   }
+  else if(meta.t==='exit'){ exitOffice(); }
   else if(meta.t==='eu'||meta.t==='eusign'){
     sfx.deny();
     startDialog([
@@ -371,6 +372,11 @@ window.addEventListener('keydown',e=>{
     return;
   }
   if(G.scene==='win'){
+    if(G.notesFor){
+      if(k.toLowerCase()==='o' && G.notesFor.src){ try{ window.open(G.notesFor.src[0][1],'_blank'); }catch(e){} }
+      else if(k.toLowerCase()!=='c') G.notesFor=null;
+      return;
+    }
     if(k==='ArrowUp'||k==='ArrowDown'||k.toLowerCase()==='w'||k.toLowerCase()==='s'){ G.winSel=1-G.winSel; sfx.step(); return; }
     if(k.toLowerCase()==='r'){ resetToTitle(); return; }
     if(k.toLowerCase()==='n'){ G.notesFor=G.notesFor?null:G.done; return; }
@@ -553,7 +559,7 @@ function update(dt){
     if(frac>=1){ const cb=wt.cb; G.waiting=null; G.dayFlash=1.2; if(cb) cb(); checkFail(); }
     return;
   }
-  if(G.dlg||G.fade) { G.moving=false; return; }
+  if(G.dlg||G.fade||G.notesFor) { G.moving=false; return; }
 
   // movement
   let vx=0, vy=0;
