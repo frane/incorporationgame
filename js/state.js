@@ -237,6 +237,49 @@ function talkTo(n){
     startDialog([{speaker:'Fresh Delaware Founder', text:"Filed this morning. Approved before lunch. Now I'm just standing here — I don't know what to do with the rest of the week."}]);
     return;
   }
+  if(n.kind==='kiosk'){
+    startDialog([
+      mkPage('Kiosquier', {t:"Annonces légales! Constitutions de sociétés, ventes aux enchères agricoles, divorces! Tout ce que la loi oblige à imprimer!", s:"Legal notices! Company formations, farm auctions, divorces! Everything the law requires to be printed!"}),
+      mkPage('Kiosquier', {t:"Votre startup paraîtra page douze. Entre un tracteur et une séparation à l'amiable. €197, tarif ministériel.", s:"Your startup will appear on page twelve. Between a tractor and an amicable separation. €197, ministerial tariff."}),
+    ]);
+    return;
+  }
+  if(n.kind==='cardwatch'){
+    startDialog([
+      {speaker:'Founder at the Mailbox', text:"Week six. Today the e-Residency card comes. I can feel it."},
+      {speaker:'Founder at the Mailbox', text:"...It did not come. Tomorrow the card comes. I can feel it."},
+    ]);
+    return;
+  }
+  if(n.kind==='lounger'){
+    startDialog([
+      {speaker:'Relaxed Founder', text:"My company is three years old. The bank account is still 'in final review'."},
+      {speaker:'Relaxed Founder', text:"At some point I stopped waiting and started living here. Honestly? Recommended."},
+    ]);
+    return;
+  }
+  if(n.kind==='barista'){
+    if(!G.espresso){
+      startDialog([
+        mkPage('Barista', {t:"Il notaio ti ha mandato qui? Prima: un espresso. La burocrazia può aspettare. La burocrazia aspetta sempre.", s:"The notary sent you? First: an espresso. The bureaucracy can wait. The bureaucracy always waits."}),
+      ], ()=>{ G.espresso=true; addSanity(8); floater('+8 sanity ☕','#a8e6a0'); sfx.coffee(); });
+    } else {
+      startDialog([ mkPage('Barista', {t:"Un altro? No. Uno al giorno. Sono regole. Le uniche regole ragionevoli di questa piazza.", s:"Another one? No. One per day. Rules. The only reasonable rules on this plaza."}) ]);
+    }
+    return;
+  }
+  if(n.kind==='siesta'){
+    startDialog([
+      mkPage('Founder mid-siesta', {t:"Estuve en la cola del NIE desde las seis de la mañana. Ahora duermo. La oficina reabre... luego.", s:"I was in the NIE queue from six in the morning. Now I sleep. The office reopens... later."}),
+    ]);
+    return;
+  }
+  if(n.kind==='hiker'){
+    startDialog([
+      mkPage('Founder with Poles', {t:"Zjutraj sem registriral svoj d.o.o. Brezplačno. Zdaj grem v hribe. Tudi hribi so brezplačni.", s:"I registered my d.o.o. this morning. Free. Now I'm off to the mountains. The mountains are also free."}),
+    ]);
+    return;
+  }
   if(n.kind==='wanderer'){
     const L=[
       "Day 60. The register wants a letter from the bank. The bank wants a letter from the register.",

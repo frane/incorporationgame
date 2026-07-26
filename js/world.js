@@ -89,6 +89,17 @@ function buildHub(){
   m.npcs.push({x:35*T+16, y:25*T+28, kind:'celebrant', cols:{skin:'#e8b48c',shirt:'#e0a020',hair:'#5a3a1a',pants:'#33364a'}});
   m.npcs.push({x:20*T, y:9*T+20,  patrol:[10*T,62*T], vx:34,  kind:'wanderer', cols:{skin:'#dca87e',shirt:'#7a4fb5',hair:'#2a2a33',pants:'#33364a'}});
   m.npcs.push({x:55*T, y:54*T+20, patrol:[12*T,68*T], vx:-30, kind:'wanderer', cols:{skin:'#e8c49c',shirt:'#3f9d5a',hair:'#4a3320',pants:'#33364a'}});
+  // country quirk characters — a different joke at each door
+  const quirk=(id,dx,kind,cols)=>{
+    const sl=HUB_POS[CINDEX[id]]; if(!sl) return;
+    m.npcs.push({x:(sl[0]+dx)*T+16, y:(sl[1]+6)*T+24, kind, cols});
+  };
+  quirk('fr',2,'kiosk',   {skin:'#e8b48c',shirt:'#5a6478',hair:'#2a2a33',pants:'#33364a'});
+  quirk('ee',7,'cardwatch',{skin:'#dca87e',shirt:'#b0a890',hair:'#c8a858',pants:'#33364a'});
+  quirk('mt',2,'lounger', {skin:'#d8956a',shirt:'#3fa9a2',hair:'#22232e',pants:'#e0cf9e'});
+  quirk('it',7,'barista', {skin:'#e8b48c',shirt:'#6e3a2c',hair:'#22232e',pants:'#33364a'});
+  quirk('es',2,'siesta',  {skin:'#dca87e',shirt:'#eabf8e',hair:'#2a2a33',pants:'#33364a'});
+  quirk('si',7,'hiker',   {skin:'#e8c49c',shirt:'#3f9d5a',hair:'#4a3320',pants:'#7a6a58'});
   m.pigeons=[]; for(let i=0;i<4;i++) m.pigeons.push({x:(30+i*5)*T, y:(29+(i%2)*6)*T, vx:0, vy:0, fly:0});
   return m;
 }

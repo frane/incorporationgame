@@ -616,45 +616,74 @@ function drawWin(){
     X.fillStyle=['#f0c040','#e05a4a','#4a90d9','#7dc87d'][i%4];
     X.fillRect(rx, ry, 4,4);
   }
-  // certificate — the accomplishment, front and center
-  const bx=120, by=24, bw=W-240, bh=228;
-  X.fillStyle='#f2ead2'; X.fillRect(bx,by,bw,bh);
-  X.strokeStyle='#b08e21'; X.lineWidth=4; X.strokeRect(bx+4,by+4,bw-8,bh-8);
-  X.strokeStyle='#d9b23c'; X.lineWidth=1.5; X.strokeRect(bx+10,by+10,bw-20,bh-20);
-  X.textAlign='center'; X.fillStyle='#6a5a20';
-  X.font='bold 12px ui-monospace,Menlo,monospace';
-  X.fillText('★ CERTIFICATE OF INCORPORATION ★', W/2, by+34);
-  X.fillStyle='#22232e'; X.font='bold 32px ui-monospace,Menlo,monospace';
-  X.fillText('You founded '+G.coName, W/2, by+76);
-  X.font='15px ui-monospace,Menlo,monospace'; X.fillStyle='#4a4534';
-  X.fillText('a '+c.entity+' in '+c.flag+' '+c.name, W/2, by+104);
-  const spent=G.feesSpent+G.livingSpent;
-  X.fillStyle='#22232e'; X.font='bold 26px ui-monospace,Menlo,monospace';
-  X.fillText('in '+G.days+' day'+(G.days===1?'':'s')+' · for '+fmtMoney(spent), W/2, by+150);
-  X.fillStyle='#6a5a20'; X.font='12px ui-monospace,Menlo,monospace';
-  X.fillText('('+fmtMoney(G.feesSpent)+' fees + '+fmtMoney(G.livingSpent)+' living)'
-    +(G.lockedCap? ' · '+fmtMoney(G.lockedCap)+' still locked as capital':''), W/2, by+176);
-  if(G.renamed) X.fillText('(born "'+G.renamed+'", renamed by government list)', W/2, by+198);
-  else X.fillText('Sanity left: '+Math.round(G.sanity)+'% · '+G.docs.length+' documents survived', W/2, by+198);
-  // seal + grade
+  // certificate — a formal document; only the official process costs live here
+  const bx=130, by=16, bw=W-260, bh=250;
+  X.fillStyle='#f6efdc'; X.fillRect(bx,by,bw,bh);
+  X.strokeStyle='#b08e21'; X.lineWidth=4; X.strokeRect(bx+5,by+5,bw-10,bh-10);
+  X.strokeStyle='#d9b23c'; X.lineWidth=1.2; X.strokeRect(bx+12,by+12,bw-24,bh-24);
+  X.fillStyle='#b08e21';
+  for(const [cxr,cyr] of [[bx+12,by+12],[bx+bw-12,by+12],[bx+12,by+bh-12],[bx+bw-12,by+bh-12]]){
+    X.save(); X.translate(cxr,cyr); X.rotate(Math.PI/4); X.fillRect(-5,-5,10,10); X.restore();
+  }
+  X.textAlign='center';
+  X.strokeStyle='#b08e21'; X.lineWidth=1;
+  X.beginPath(); X.moveTo(bx+70,by+40); X.lineTo(W/2-175,by+40);
+  X.moveTo(W/2+175,by+40); X.lineTo(bx+bw-70,by+40); X.stroke();
+  X.fillStyle='#6a5a20'; X.font='bold 13px ui-monospace,Menlo,monospace';
+  X.fillText('C E R T I F I C A T E  O F  I N C O R P O R A T I O N', W/2, by+44);
+  X.fillStyle='#8a7a4a'; X.font='italic 12px ui-monospace,Menlo,monospace';
+  X.fillText('This is to certify that', W/2, by+70);
+  X.fillStyle='#22232e'; X.font='bold 34px ui-monospace,Menlo,monospace';
+  X.fillText(G.coName, W/2, by+106);
+  if(G.renamed){
+    X.fillStyle='#8a7a4a'; X.font='italic 10px ui-monospace,Menlo,monospace';
+    X.fillText('(born "'+G.renamed+'", renamed by government list)', W/2, by+122);
+  }
+  X.fillStyle='#4a4534'; X.font='14px ui-monospace,Menlo,monospace';
+  X.fillText('is duly incorporated as a '+c.entity+' in '+c.flag+' '+c.name, W/2, by+140);
+  X.fillStyle='#22232e'; X.font='bold 23px ui-monospace,Menlo,monospace';
+  X.fillText(G.days+' day'+(G.days===1?'':'s')+' · '+fmtMoney(G.feesSpent)+' in official fees', W/2, by+172);
+  X.fillStyle='#8a7a4a'; X.font='10px ui-monospace,Menlo,monospace';
+  X.fillText('paid to the notaries, registries, chambers and gazettes of '+c.name, W/2, by+190);
+  // date line, registrar signature, wax seal
+  X.strokeStyle='#8a7a4a'; X.lineWidth=1;
+  X.beginPath(); X.moveTo(bx+80,by+222); X.lineTo(bx+250,by+222); X.stroke();
+  X.beginPath(); X.moveTo(W/2-90,by+222); X.lineTo(W/2+90,by+222); X.stroke();
+  X.fillStyle='#8a7a4a'; X.font='10px ui-monospace,Menlo,monospace';
+  X.fillText('given on day '+G.days, bx+165, by+234);
+  X.fillText('the Registrar', W/2, by+234);
+  X.strokeStyle='#3a3428'; X.lineWidth=1.6;
+  X.beginPath(); X.moveTo(W/2-80,by+214);
+  X.bezierCurveTo(W/2-50,by+196, W/2-30,by+226, W/2,by+208);
+  X.bezierCurveTo(W/2+30,by+192, W/2+50,by+220, W/2+80,by+206);
+  X.stroke();
   const [g,quip]=grade(G.days);
-  X.fillStyle='#c0392b'; X.beginPath(); X.arc(bx+bw-56,by+bh-52,32,0,7); X.fill();
-  X.fillStyle='#f2ead2'; X.font='bold 32px ui-monospace,Menlo,monospace';
-  X.fillText(g, bx+bw-56, by+bh-41);
+  const sx=bx+bw-64, sy=by+194;
+  X.fillStyle='#8a2424';
+  X.beginPath(); X.moveTo(sx-12,sy+8); X.lineTo(sx-26,sy+40); X.lineTo(sx-4,sy+30); X.closePath(); X.fill();
+  X.beginPath(); X.moveTo(sx+12,sy+8); X.lineTo(sx+26,sy+40); X.lineTo(sx+4,sy+30); X.closePath(); X.fill();
+  X.fillStyle='#b83232'; X.beginPath(); X.arc(sx,sy,26,0,7); X.fill();
+  X.strokeStyle='#8a2424'; X.lineWidth=2.5; X.beginPath(); X.arc(sx,sy,20,0,7); X.stroke();
+  X.fillStyle='#f6efdc'; X.font='bold 24px ui-monospace,Menlo,monospace';
+  X.fillText(g, sx, sy+9);
+  // off the record — the unofficial damage, separate and small
+  X.fillStyle='#8a90a4'; X.font='12px ui-monospace,Menlo,monospace';
+  X.fillText('off the record: '+fmtMoney(G.livingSpent)+' on rent & ramen · '+fmtMoney(G.lockedCap)
+    +' locked as capital · sanity '+Math.round(G.sanity)+'% · '+G.docs.length+' documents', W/2, 284);
   X.fillStyle='#f0c040'; X.font='italic 13px ui-monospace,Menlo,monospace';
-  X.fillText('Grade '+g+' — '+quip, W/2, 274);
+  X.fillText('Grade '+g+' — '+quip, W/2, 302);
   const hasAch=G.newAch && G.newAch.length, hasSerial=Object.keys(DONE).length>=COUNTRIES.length;
   if(hasAch){
     X.fillStyle='#7dc87d'; X.font='bold 12px ui-monospace,Menlo,monospace';
-    X.fillText('🏆 unlocked: '+G.newAch.join(' · '), W/2, 292);
+    X.fillText('🏆 unlocked: '+G.newAch.join(' · '), W/2, 318);
   }
   if(hasSerial){
     X.fillStyle='#ffd766'; X.font='bold 14px ui-monospace,Menlo,monospace';
-    X.fillText('★ SERIAL FOUNDER — incorporated in all 28. Please seek help. ★', W/2, hasAch?308:292);
+    X.fillText('★ SERIAL FOUNDER — incorporated in all 28. Please seek help. ★', W/2, hasAch?334:318);
   }
   const outro = c.outro || ('It took '+G.days+' days. Somewhere in Delaware, a founder did all of this during a single lunch break.');
   X.fillStyle='#c8cede'; X.font='12px ui-monospace,Menlo,monospace';
-  let oy=(hasAch&&hasSerial)? 326 : (hasAch||hasSerial)? 312 : 296;
+  let oy=(hasAch&&hasSerial)? 348 : (hasAch||hasSerial)? 332 : 316;
   for(const line of wrapText(outro, 760, '12px ui-monospace,Menlo,monospace')){ X.fillText(line, W/2, oy); oy+=16; }
 
   // league table
@@ -662,10 +691,10 @@ function drawWin(){
   X.fillText('— THE LEAGUE TABLE OF BUREAUCRACY (estimated days to exist) —', W/2, oy+12);
   const sorted=[...COUNTRIES].sort((a,b)=>a.estDays-b.estDays);
   X.font='10px ui-monospace,Menlo,monospace'; X.textAlign='left';
-  const rows=Math.ceil(sorted.length/3), top=oy+26;
+  const rows=Math.ceil(sorted.length/3), top=oy+22;
   sorted.forEach((cc,i)=>{
     const col=(i/rows)|0, row=i%rows;
-    const x=68+col*300, y=top+row*14;
+    const x=68+col*300, y=top+row*13;
     X.fillStyle = cc===c? '#f0c040' : DONE[cc.id]? '#7dc87d' : '#8a90a4';
     const pb=PB[cc.id]? '  ✓'+PB[cc.id].d+'d' : '';
     X.fillText((cc===c?'▸ ':'  ')+cc.flag+' '+cc.name.padEnd(14).slice(0,14)+' '+String(cc.estDays).padStart(3)+'d ~'+fmtMoney(cc.estFees)+pb, x, y);
