@@ -117,7 +117,7 @@ function buildOffice(ci){
     mset(m,dx,dy,DESK); m.meta.set(mkey(dx,dy),{t:'step',i});
     m.npcs.push({ x:dx*T+16, y:dy*T-4, name:c.steps[i].who, stepIdx:i,
       cols:{skin:'#e8b48c', shirt:roles[i%roles.length], hair:i%2?'#4a3320':'#22232e', pants:'#33364a'} });
-    m.labels.push({x:dx*T+16, y:(dy+1)*T+16, text:c.steps[i].who.length>22? c.steps[i].who.slice(0,21)+'…' : c.steps[i].who});
+    m.labels.push({x:dx*T+16, y:(dy+1)*T+16, text:c.steps[i].who.length>18? c.steps[i].who.slice(0,17)+'…' : c.steps[i].who});
   }
   m.labels.push({x:ex*T+16, y:T+26, text:c.flag+' '+(c.office||c.name)});
   return m;

@@ -396,13 +396,19 @@ function drawHUD(){
   X.fillText('burned '+fmtMoney(G.feesSpent)+' in fees · '+fmtMoney(G.lockedCap)+' locked · '+fmtMoney(G.livingSpent)+' on rent & ramen (€40/day) · started with €30,000', 14, 36);
   if(location.search.includes('debug=')){ X.fillText((G.px|0)+','+(G.py|0), 850, 36); }
   // mission
-  X.textAlign='right'; X.font='bold 13px ui-monospace,Menlo,monospace'; X.fillStyle='#f2e8cf';
+  X.textAlign='right'; X.fillStyle='#f2e8cf';
   let mission;
   if(G.done) mission='✓ '+G.coName+' — incorporated in '+G.done.name;
   else if(G.inOffice>=0){
     const c=COUNTRIES[G.inOffice], p=G.progress[c.id]||0;
     mission=c.flag+' '+c.name+' — step '+Math.min(p+1,c.steps.length)+'/'+c.steps.length;
   } else mission='Mission: incorporate '+G.coName+'. Anywhere. Somehow.';
+  X.font='bold 13px ui-monospace,Menlo,monospace';
+  if(X.measureText(mission).width>420){
+    X.font='bold 11px ui-monospace,Menlo,monospace';
+    while(mission.length>8 && X.measureText(mission).width>420) mission=mission.slice(0,-2);
+    if(!mission.endsWith('…')) mission+='…';
+  }
   X.fillText(mission, W-14, 15);
   X.textAlign='left';
 
@@ -413,9 +419,9 @@ function drawHUD(){
     const a=clamp(Math.min(t.t*4, 3.4-t.t),0,1);
     X.globalAlpha=a*0.95;
     const tw=X.measureText(t.txt).width+20;
-    X.fillStyle='#1b1e2b'; X.fillRect(W-tw-14, 40+i*30, tw, 24);
-    X.strokeStyle='#f0c040'; X.strokeRect(W-tw-13.5, 40.5+i*30, tw, 24);
-    X.fillStyle='#f2e8cf'; X.fillText(t.txt, W-tw-4, 52+i*30);
+    X.fillStyle='#1b1e2b'; X.fillRect(W-tw-14, 56+i*30, tw, 24);
+    X.strokeStyle='#f0c040'; X.strokeRect(W-tw-13.5, 56.5+i*30, tw, 24);
+    X.fillStyle='#f2e8cf'; X.fillText(t.txt, W-tw-4, 68+i*30);
     X.globalAlpha=1;
   });
 
@@ -442,15 +448,20 @@ function drawDialog(){
   const d=G.dlg; if(!d) return;
   const p=d.pages[d.i];
   d.chars=Math.min(p.text.length, d.chars + 1.7);
-  const fM=Math.round(15*UIS), fS=Math.round(12*UIS), fH=Math.round(14*UIS);
-  const lhM=Math.round(22*UIS), lhS=Math.round(17*UIS), lhO=Math.round(24*UIS);
-  const fontM=fM+'px ui-monospace,Menlo,monospace';
-  const fontS='italic '+fS+'px ui-monospace,Menlo,monospace';
   const bx=20, bw=W-40;
-  const mainLines=wrapText(p.text, bw-60, fontM);
-  const subLines = p.sub? wrapText(p.sub, bw-80, fontS) : [];
-  let bh = 30 + (p.speaker?lhO:0) + mainLines.length*lhM + (subLines.length? subLines.length*lhS+12:0) + lhM;
-  if(p.options) bh += p.options.length*lhO + 8;
+  let uis=UIS, fM,fS,fH,lhM,lhS,lhO,fontM,fontS,mainLines,subLines,bh;
+  do {
+    fM=Math.round(15*uis); fS=Math.round(12*uis); fH=Math.round(14*uis);
+    lhM=Math.round(22*uis); lhS=Math.round(17*uis); lhO=Math.round(24*uis);
+    fontM=fM+'px ui-monospace,Menlo,monospace';
+    fontS='italic '+fS+'px ui-monospace,Menlo,monospace';
+    mainLines=wrapText(p.text, bw-60, fontM);
+    subLines = p.sub? wrapText(p.sub, bw-80, fontS) : [];
+    bh = 30 + (p.speaker?lhO:0) + mainLines.length*lhM + (subLines.length? subLines.length*lhS+12:0) + lhM;
+    if(p.options) bh += p.options.length*lhO + 8;
+    if(bh<=H-64 || uis<=1.05) break;
+    uis-=0.12;
+  } while(true);
   const by=H-bh-16;
   X.fillStyle='rgba(20,23,34,0.96)'; X.fillRect(bx,by,bw,bh);
   X.strokeStyle='#e8dcc8'; X.lineWidth=3; X.strokeRect(bx+1.5,by+1.5,bw-3,bh-3);
@@ -632,17 +643,18 @@ function drawWin(){
   X.fillText(g, bx+bw-56, by+bh-41);
   X.fillStyle='#f0c040'; X.font='italic 13px ui-monospace,Menlo,monospace';
   X.fillText('Grade '+g+' — '+quip, W/2, 274);
-  if(G.newAch && G.newAch.length){
+  const hasAch=G.newAch && G.newAch.length, hasSerial=Object.keys(DONE).length>=COUNTRIES.length;
+  if(hasAch){
     X.fillStyle='#7dc87d'; X.font='bold 12px ui-monospace,Menlo,monospace';
     X.fillText('🏆 unlocked: '+G.newAch.join(' · '), W/2, 292);
   }
-  if(Object.keys(DONE).length>=COUNTRIES.length){
+  if(hasSerial){
     X.fillStyle='#ffd766'; X.font='bold 14px ui-monospace,Menlo,monospace';
-    X.fillText('★ SERIAL FOUNDER — incorporated in all 28. Please seek help. ★', W/2, 292);
+    X.fillText('★ SERIAL FOUNDER — incorporated in all 28. Please seek help. ★', W/2, hasAch?308:292);
   }
   const outro = c.outro || ('It took '+G.days+' days. Somewhere in Delaware, a founder did all of this during a single lunch break.');
   X.fillStyle='#c8cede'; X.font='12px ui-monospace,Menlo,monospace';
-  let oy=(G.newAch&&G.newAch.length)||Object.keys(DONE).length>=COUNTRIES.length? 312:296;
+  let oy=(hasAch&&hasSerial)? 326 : (hasAch||hasSerial)? 312 : 296;
   for(const line of wrapText(outro, 760, '12px ui-monospace,Menlo,monospace')){ X.fillText(line, W/2, oy); oy+=16; }
 
   // league table
