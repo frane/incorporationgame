@@ -42,15 +42,15 @@ function buildHub(){
   for(let c=0;c<6;c++) slots.push([3+c*12,12]);   // north inner
   for(let r=0;r<3;r++) slots.push([2,24+r*9]);    // west
   for(let r=0;r<3;r++) slots.push([69,24+r*9]);   // east
-  for(let c=0;c<6;c++) slots.push([3+c*12,48]);   // south inner
-  for(let c=0;c<3;c++) slots.push([21+c*12,56]);  // south outer
+  for(let c=0;c<6;c++) slots.push([3+c*12,50]);   // south inner
+  for(let c=0;c<3;c++) slots.push([21+c*12,58]);  // south outer
   for(let i=1;i<COUNTRIES.length;i++){
     HUB_POS[i]=slots[i-1];
     placeBuilding(slots[i-1][0], slots[i-1][1], i);
   }
   // streets + avenues
-  for(const y of [9,18,46,54,62]) for(let x=1;x<HUBW-1;x++) if(mget(m,x,y)===GRASS) mset(m,x,y,PATH);
-  for(const x of [7,40,72]) for(let y=9;y<=62;y++) if(mget(m,x,y)===GRASS) mset(m,x,y,PATH);
+  for(const y of [9,18,48,56,64]) for(let x=1;x<HUBW-1;x++) if(mget(m,x,y)===GRASS) mset(m,x,y,PATH);
+  for(const x of [7,40,72]) for(let y=9;y<=64;y++) if(mget(m,x,y)===GRASS) mset(m,x,y,PATH);
   // central plaza
   for(let y=26;y<=38;y++) for(let x=26;x<=53;x++) mset(m,x,y,PLAZA);
   mset(m,40,32,FOUNTAIN);
